@@ -1,5 +1,7 @@
 # bridge40：40 m 簡支後拉預力 I 型梁橋設計程式
 
+繁體中文 | [English](README.en.md)
+
 依交通部「公路橋梁設計規範」（98 年版，含 104、109 年修訂）與「公路橋梁耐震設計規範」（107 年 12 月版），計算一座 40 m 簡支後拉預力 I 型梁橋的上部結構，並由計算結果直接產生三張 A3 設計圖。
 
 > 這是方法示範，不是可施工的設計。橋台、基礎與液化沒有設計；實際設計須由執業技師負責並簽證。
@@ -86,3 +88,7 @@ python docs/make_figures.py    # （選用）重畫設計說明的兩張圖，�
 
 - [交通部：公路橋梁設計規範](https://www.motc.gov.tw/ch/app/data/view?module=divpubreg&id=740&serno=424)
 - [交通部：公路橋梁耐震設計規範](https://www.motc.gov.tw/ch/app/divpubreg_list/view?module=divpubreg&id=740&serno=419)
+
+## 授權
+
+本 repo 的程式碼、文件與圖面以 [MIT 授權](LICENSE)釋出。執行時用到的第三方套件（OpenSeesPy、NumPy、CairoSVG、pypdf、Matplotlib）與字型沒有包含在本 repo，各自適用原作者的授權，詳見 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。其中 OpenSeesPy 僅限研究、教學與內部使用免費，商業再散布需另向作者取得授權。
