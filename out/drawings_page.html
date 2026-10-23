@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>40 m PCI 梁橋設計圖</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* 版面：圖框式檢視器——上方圖號籤、中間整張圖紙、下方圖紙比例控制 */
+:root {
+  --bg: #e9edef; --surface: #f7f9fa; --fg: #1b2429; --muted: #56656f; --line: #c4ced4;
+  --accent: #1f5fbf; --accent-ink: #ffffff;
+  --font-body: 'Noto Sans TC', 'Noto Sans CJK TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --font-data: 'IBM Plex Mono', ui-monospace, monospace;
+  --paper:#fbfcfc;--ink:#1b2429;--ink2:#56656f;--dim:#2f5b7c;--conc:#eef1f2;--cut:#d9e0e5;--cut2:#e7ecef;--acc:#1f5fbf;--accbg:#dbe7fa;--keybg:#f3e6c8;--stamp:#b42318;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1417; --surface: #161d21; --fg: #dfe6ea; --muted: #98a8b2; --line: #2c373d;
+    --accent: #6ea4ff; --accent-ink: #0f1417; --paper:#141a1e;--ink:#dfe6ea;--ink2:#98a8b2;--dim:#8fb6d6;--conc:#1c2429;--cut:#2a353c;--cut2:#222b31;--acc:#6ea4ff;--accbg:#1d2c44;--keybg:#3a3220;--stamp:#f2735f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1417; --surface: #161d21; --fg: #dfe6ea; --muted: #98a8b2; --line: #2c373d;
+  --accent: #6ea4ff; --accent-ink: #0f1417; --paper:#141a1e;--ink:#dfe6ea;--ink2:#98a8b2;--dim:#8fb6d6;--conc:#1c2429;--cut:#2a353c;--cut2:#222b31;--acc:#6ea4ff;--accbg:#1d2c44;--keybg:#3a3220;--stamp:#f2735f; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); }
+.wrap { max-width: 1500px; margin: 0 auto; padding-block: 20px 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 16px; }
+header { display: grid; gap: 10px; }
+h1 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); font-weight: 700; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0; font-size: .95rem; line-height: 1.6; max-width: 70ch; }
+dl.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 4px 0 0; }
+.fact { display: grid; gap: 2px; min-width: 0; }
+.fact dt { font-size: .72rem; letter-spacing: .08em; color: var(--muted); }
+.fact dd { margin: 0; font-family: var(--font-data); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tab { display: inline-flex; gap: 8px; align-items: baseline; font: inherit; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+  padding: 8px 12px; border-radius: 4px; }
+.tab .no { font-family: var(--font-data); font-weight: 500; }
+.tab .nm { font-size: .9rem; color: var(--muted); }
+.tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tab[aria-selected="true"] .nm { color: var(--accent-ink); }
+.tab:focus-visible, .zoom button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.zoom { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.zoom button { font: inherit; font-size: .85rem; border: 0; background: var(--surface); color: var(--fg);
+  padding: 7px 12px; cursor: pointer; }
+.zoom button + button { border-left: 1px solid var(--line); }
+.zoom button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.sheet { border: 1px solid var(--line); background: var(--paper); min-width: 0; }
+.scroller { overflow: auto; max-height: 82vh; }
+.scroller svg { display: block; width: 100%; height: auto; }
+.sheet[data-zoom="1.5"] .scroller svg { width: 150%; }
+.sheet[data-zoom="2"] .scroller svg { width: 200%; }
+footer { color: var(--muted); font-size: .85rem; line-height: 1.7; max-width: 80ch; }
+@media (max-width: 700px) { .scroller svg { width: 200%; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>40 m 簡支後拉預力 I 型梁橋 設計圖</h1>
+    <p class="sub">依交通部公路橋梁設計規範與公路橋梁耐震設計規範計算，三張圖都由同一支程式從計算結果直接產生。示範用途，非施工圖。</p>
+    <dl class="facts"><div class="fact"><dt>跨徑</dt><dd>40 m</dd></div><div class="fact"><dt>梁</dt><dd>4 支後拉 I 型梁，高 2.1 m</dd></div><div class="fact"><dt>預力</dt><dd>4 束 × 10 股 15.2 mm</dd></div><div class="fact"><dt>活載重</dt><dd>HS20-44</dd></div><div class="fact"><dt>橋址</dt><dd>台中市南屯區</dd></div><div class="fact"><dt>止震塊</dt><dd>每座橋台 3,133 kN</dd></div></dl>
+  </header>
+  <div class="toolbar">
+    <nav class="tabs" role="tablist" aria-label="圖號"><button type="button" role="tab" class="tab" id="tab-s01" data-sheet="s01" aria-controls="sheet-s01"><span class="no">S-01</span><span class="nm">一般配置圖</span></button><button type="button" role="tab" class="tab" id="tab-s02" data-sheet="s02" aria-controls="sheet-s02"><span class="no">S-02</span><span class="nm">預力梁與鋼腱詳圖</span></button><button type="button" role="tab" class="tab" id="tab-s03" data-sheet="s03" aria-controls="sheet-s03"><span class="no">S-03</span><span class="nm">配筋、支承與耐震配置</span></button></nav>
+    <div class="zoom" role="group" aria-label="圖紙縮放">
+      <button type="button" id="z1" data-z="1" aria-pressed="true">符合寬度</button>
+      <button type="button" id="z15" data-z="1.5" aria-pressed="false">150%</button>
+      <button type="button" id="z2" data-z="2" aria-pressed="false">200%</button>
+    </div>
+  </div>
+  <section class="sheet" id="sheet-s01" aria-label="S-01 一般配置圖" hidden><div class="scroller"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 1188" width="1680" height="1188" role="img" aria-label="S-01 一般配置圖"><style>
+.paper{fill:var(--paper)}
+.frame{stroke:var(--ink);stroke-width:2.4;fill:none}
+.fthin{stroke:var(--ink);stroke-width:1;fill:none}
+.obj{stroke:var(--ink);stroke-width:1.5;fill:var(--conc)}
+.cut{stroke:var(--ink);stroke-width:1.5;fill:var(--cut)}
+.cut2{stroke:var(--ink);stroke-width:1.1;fill:var(--cut2)}
+.thin{stroke:var(--ink);stroke-width:.8;fill:none}
+.hid{stroke:var(--ink2);stroke-width:1;stroke-dasharray:7 4;fill:none}
+.cl{stroke:var(--ink2);stroke-width:.8;stroke-dasharray:22 4 3 4;fill:none}
+.dim{stroke:var(--dim);stroke-width:.8;fill:none}
+.dimtick{stroke:var(--dim);stroke-width:1.4}
+.dimtxt{fill:var(--dim);font:13px 'IBM Plex Mono','DejaVu Sans Mono',ui-monospace,monospace}
+.leader{stroke:var(--ink2);stroke-width:.8;fill:none}
+.lbl{fill:var(--ink);font:14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lbl2{fill:var(--ink2);font:13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lbls{fill:var(--ink2);font:12px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lblacc{fill:var(--acc);font:500 14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.vtitle{fill:var(--ink);font:600 18px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.vline{stroke:var(--ink);stroke-width:1.6}
+.vscale{fill:var(--ink2);font:13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tendon{stroke:var(--acc);stroke-width:1.8;fill:none}
+.tendon2{stroke:var(--acc);stroke-width:1.8;stroke-dasharray:10 4;fill:none}
+.duct{stroke:var(--acc);stroke-width:1.4;fill:var(--paper)}
+.ductc{fill:var(--acc)}
+.anchor{stroke:var(--acc);stroke-width:1.4;fill:var(--accbg)}
+.bar{stroke:var(--ink);stroke-width:1.3;fill:none}
+.barb{stroke:var(--acc);stroke-width:1.8;fill:none}
+.dot{fill:var(--ink)}
+.rubber{stroke:var(--ink);stroke-width:1;fill:var(--cut2)}
+.plate{stroke:var(--ink);stroke-width:.8;fill:var(--ink2)}
+.key{stroke:var(--ink);stroke-width:1.4;fill:var(--keybg)}
+.hatch{stroke:var(--ink2);stroke-width:.6}
+.brk{stroke:var(--ink);stroke-width:1;fill:none}
+.hdr{fill:var(--ink);font:600 15px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.note{fill:var(--ink);font:13.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.notes{fill:var(--ink2);font:12.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbk{fill:var(--ink2);font:12.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbv{fill:var(--ink);font:14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbvb{fill:var(--ink);font:600 17px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.stamp{fill:none;stroke:var(--stamp);stroke-width:2.4}
+.stamptxt{fill:var(--stamp);font:700 20px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif;letter-spacing:3px}
+.tbl{stroke:var(--ink2);stroke-width:.7;fill:none}
+.tbltxt{fill:var(--ink);font:13px 'IBM Plex Mono','DejaVu Sans Mono',ui-monospace,monospace}
+.tblhdr{fill:var(--ink);font:600 13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+</style><rect x="0.00" y="0.00" width="1680.00" height="1188.00" class="paper"/>
+<rect x="20.00" y="20.00" width="1640.00" height="1148.00" class="frame"/>
+<line x1="20.00" y1="1062.00" x2="1660.00" y2="1062.00" class="frame"/>
+<line x1="520.00" y1="1062.00" x2="520.00" y2="1168.00" class="fthin"/>
+<text x="32.00" y="1086.00" class="tbk" text-anchor="start">工程名稱</text>
+<text x="32.00" y="1120.00" class="tbv" text-anchor="start">40 m 簡支後拉預力 I 型梁橋（示範設計）</text>
+<line x1="1000.00" y1="1062.00" x2="1000.00" y2="1168.00" class="fthin"/>
+<text x="532.00" y="1086.00" class="tbk" text-anchor="start">圖名</text>
+<text x="532.00" y="1120.00" class="tbvb" text-anchor="start">一般配置圖</text>
+<line x1="1150.00" y1="1062.00" x2="1150.00" y2="1168.00" class="fthin"/>
+<text x="1012.00" y="1086.00" class="tbk" text-anchor="start">圖號</text>
+<text x="1012.00" y="1120.00" class="tbvb" text-anchor="start">S-01</text>
+<line x1="1330.00" y1="1062.00" x2="1330.00" y2="1168.00" class="fthin"/>
+<text x="1162.00" y="1086.00" class="tbk" text-anchor="start">比例</text>
+<text x="1162.00" y="1120.00" class="tbv" text-anchor="start">如圖示</text>
+<line x1="1660.00" y1="1062.00" x2="1660.00" y2="1168.00" class="fthin"/>
+<text x="1342.00" y="1086.00" class="tbk" text-anchor="start">依據</text>
+<text x="1342.00" y="1120.00" class="tbv" text-anchor="start">交通部公路橋梁設計規範、耐震設計規範</text>
+<text x="32.00" y="1154.00" class="tbk" text-anchor="start">所有尺寸以 mm 計，高程與座標自梁底、梁端起算；本圖由程式自計算結果產生。</text>
+<text x="1342.00" y="1154.00" class="tbk" text-anchor="start">2026-10-23　設計：AI 示範（未經技師簽證）</text>
+<rect x="1415.00" y="30.00" width="230.00" height="44.00" class="stamp"/>
+<text x="1530.00" y="60.00" class="stamptxt" text-anchor="middle">示範・非施工圖</text>
+<text x="840.00" y="54.00" class="vtitle" text-anchor="middle">立面圖</text>
+<line x1="765.00" y1="61.00" x2="915.00" y2="61.00" class="vline"/>
+<text x="840.00" y="80.00" class="vscale" text-anchor="middle">S = 1:120</text>
+<polygon points="155.17,229.17 168.50,229.17 168.50,315.00 196.67,315.00 196.67,396.67 125.17,396.67 125.17,350.00 155.17,350.00" class="hid"/>
+<rect x="175.00" y="311.00" width="16.67" height="2.00" class="thin"/>
+<polygon points="1544.83,229.17 1531.50,229.17 1531.50,315.00 1503.33,315.00 1503.33,396.67 1574.83,396.67 1574.83,350.00 1544.83,350.00" class="hid"/>
+<rect x="1508.33" y="311.00" width="16.67" height="2.00" class="thin"/>
+<text x="120.00" y="406.67" class="lbls" text-anchor="start">橋台（下部結構另案設計，需地質資料）</text>
+<rect x="170.00" y="240.00" width="1360.00" height="70.00" class="obj"/>
+<rect x="170.00" y="231.67" width="1360.00" height="6.67" class="cut2"/>
+<line x1="170.00" y1="203.33" x2="1530.00" y2="203.33" class="thin"/>
+<line x1="170.00" y1="203.33" x2="170.00" y2="231.67" class="thin"/>
+<line x1="1530.00" y1="203.33" x2="1530.00" y2="231.67" class="thin"/>
+<text x="1122.00" y="197.33" class="lbls" text-anchor="middle">護欄頂</text>
+<rect x="177.50" y="310.00" width="11.67" height="3.00" class="obj"/>
+<rect x="179.17" y="240.00" width="8.33" height="61.67" class="hid"/>
+<rect x="1510.83" y="310.00" width="11.67" height="3.00" class="obj"/>
+<rect x="1512.50" y="240.00" width="8.33" height="61.67" class="hid"/>
+<rect x="845.83" y="248.33" width="8.33" height="53.33" class="hid"/>
+<line x1="850.00" y1="198.33" x2="850.00" y2="340.00" class="cl"/>
+<text x="850.00" y="356.00" class="lbl2" text-anchor="middle">CL 跨中</text>
+<polyline points="170.00,255.00 187.00,257.27 204.00,259.49 221.00,261.64 238.00,263.74 255.00,265.78 272.00,267.76 289.00,269.69 306.00,271.56 323.00,273.37 340.00,275.12 357.00,276.82 374.00,278.46 391.00,280.04 408.00,281.56 425.00,283.03 442.00,284.44 459.00,285.79 476.00,287.08 493.00,288.32 510.00,289.50 527.00,290.62 544.00,291.69 561.00,292.69 578.00,293.64 595.00,294.53 612.00,295.37 629.00,296.14 646.00,296.86 663.00,297.52 680.00,298.12 697.00,298.67 714.00,299.16 731.00,299.59 748.00,299.96 765.00,300.28 782.00,300.54 799.00,300.74 816.00,300.88 833.00,300.97 850.00,301.00 867.00,300.97 884.00,300.88 901.00,300.74 918.00,300.54 935.00,300.28 952.00,299.96 969.00,299.59 986.00,299.16 1003.00,298.67 1020.00,298.12 1037.00,297.52 1054.00,296.86 1071.00,296.14 1088.00,295.37 1105.00,294.53 1122.00,293.64 1139.00,292.69 1156.00,291.69 1173.00,290.62 1190.00,289.50 1207.00,288.32 1224.00,287.08 1241.00,285.79 1258.00,284.44 1275.00,283.03 1292.00,281.56 1309.00,280.04 1326.00,278.46 1343.00,276.82 1360.00,275.12 1377.00,273.37 1394.00,271.56 1411.00,269.69 1428.00,267.76 1445.00,265.78 1462.00,263.74 1479.00,261.64 1496.00,259.49 1513.00,257.27 1530.00,255.00" class="tendon2"/>
+<polyline points="170.00,268.33 187.00,269.95 204.00,271.52 221.00,273.05 238.00,274.54 255.00,275.99 272.00,277.40 289.00,278.77 306.00,280.09 323.00,281.38 340.00,282.62 357.00,283.83 374.00,284.99 391.00,286.12 408.00,287.20 425.00,288.24 442.00,289.24 459.00,290.20 476.00,291.12 493.00,292.00 510.00,292.83 527.00,293.63 544.00,294.38 561.00,295.10 578.00,295.77 595.00,296.41 612.00,297.00 629.00,297.55 646.00,298.06 663.00,298.53 680.00,298.96 697.00,299.35 714.00,299.69 731.00,300.00 748.00,300.26 765.00,300.49 782.00,300.67 799.00,300.82 816.00,300.92 833.00,300.98 850.00,301.00 867.00,300.98 884.00,300.92 901.00,300.82 918.00,300.67 935.00,300.49 952.00,300.26 969.00,300.00 986.00,299.69 1003.00,299.35 1020.00,298.96 1037.00,298.53 1054.00,298.06 1071.00,297.55 1088.00,297.00 1105.00,296.41 1122.00,295.77 1139.00,295.10 1156.00,294.38 1173.00,293.63 1190.00,292.83 1207.00,292.00 1224.00,291.12 1241.00,290.20 1258.00,289.24 1275.00,288.24 1292.00,287.20 1309.00,286.12 1326.00,284.99 1343.00,283.83 1360.00,282.62 1377.00,281.38 1394.00,280.09 1411.00,278.77 1428.00,277.40 1445.00,275.99 1462.00,274.54 1479.00,273.05 1496.00,271.52 1513.00,269.95 1530.00,268.33" class="tendon2"/>
+<polyline points="170.00,281.67 187.00,282.85 204.00,284.01 221.00,285.13 238.00,286.23 255.00,287.29 272.00,288.33 289.00,289.33 306.00,290.31 323.00,291.25 340.00,292.17 357.00,293.05 374.00,293.91 391.00,294.73 408.00,295.53 425.00,296.29 442.00,297.03 459.00,297.73 476.00,298.41 493.00,299.05 510.00,299.67 527.00,300.25 544.00,300.81 561.00,301.33 578.00,301.83 595.00,302.29 612.00,302.73 629.00,303.13 646.00,303.51 663.00,303.85 680.00,304.17 697.00,304.45 714.00,304.71 731.00,304.93 748.00,305.13 765.00,305.29 782.00,305.43 799.00,305.53 816.00,305.61 833.00,305.65 850.00,305.67 867.00,305.65 884.00,305.61 901.00,305.53 918.00,305.43 935.00,305.29 952.00,305.13 969.00,304.93 986.00,304.71 1003.00,304.45 1020.00,304.17 1037.00,303.85 1054.00,303.51 1071.00,303.13 1088.00,302.73 1105.00,302.29 1122.00,301.83 1139.00,301.33 1156.00,300.81 1173.00,300.25 1190.00,299.67 1207.00,299.05 1224.00,298.41 1241.00,297.73 1258.00,297.03 1275.00,296.29 1292.00,295.53 1309.00,294.73 1326.00,293.91 1343.00,293.05 1360.00,292.17 1377.00,291.25 1394.00,290.31 1411.00,289.33 1428.00,288.33 1445.00,287.29 1462.00,286.23 1479.00,285.13 1496.00,284.01 1513.00,282.85 1530.00,281.67" class="tendon2"/>
+<polyline points="170.00,295.00 187.00,295.53 204.00,296.04 221.00,296.54 238.00,297.03 255.00,297.50 272.00,297.96 289.00,298.41 306.00,298.84 323.00,299.26 340.00,299.67 357.00,300.06 374.00,300.44 391.00,300.81 408.00,301.16 425.00,301.50 442.00,301.83 459.00,302.14 476.00,302.44 493.00,302.73 510.00,303.00 527.00,303.26 544.00,303.51 561.00,303.74 578.00,303.96 595.00,304.17 612.00,304.36 629.00,304.54 646.00,304.71 663.00,304.86 680.00,305.00 697.00,305.13 714.00,305.24 731.00,305.34 748.00,305.43 765.00,305.50 782.00,305.56 799.00,305.61 816.00,305.64 833.00,305.66 850.00,305.67 867.00,305.66 884.00,305.64 901.00,305.61 918.00,305.56 935.00,305.50 952.00,305.43 969.00,305.34 986.00,305.24 1003.00,305.13 1020.00,305.00 1037.00,304.86 1054.00,304.71 1071.00,304.54 1088.00,304.36 1105.00,304.17 1122.00,303.96 1139.00,303.74 1156.00,303.51 1173.00,303.26 1190.00,303.00 1207.00,302.73 1224.00,302.44 1241.00,302.14 1258.00,301.83 1275.00,301.50 1292.00,301.16 1309.00,300.81 1326.00,300.44 1343.00,300.06 1360.00,299.67 1377.00,299.26 1394.00,298.84 1411.00,298.41 1428.00,297.96 1445.00,297.50 1462.00,297.03 1479.00,296.54 1496.00,296.04 1513.00,295.53 1530.00,295.00" class="tendon2"/>
+<polyline points="482.80,286.67 512.80,360.00 542.80,360.00" class="leader"/>
+<text x="546.80" y="356.00" class="lblacc" text-anchor="start">後拉鋼腱 4 束（拋物線）</text>
+<polyline points="853.33,270.00 890.00,353.33 920.00,353.33" class="leader"/>
+<text x="924.00" y="349.33" class="lbl2" text-anchor="start">跨中隔梁 t = 250</text>
+<polyline points="1516.67,311.50 1496.67,366.67 1466.67,366.67" class="leader"/>
+<text x="1462.67" y="362.67" class="lbl2" text-anchor="end">鋼板加勁橡膠支承 350×500×90</text>
+<line x1="170.00" y1="200.33" x2="170.00" y2="136.00" class="dim"/>
+<line x1="1530.00" y1="200.33" x2="1530.00" y2="136.00" class="dim"/>
+<line x1="170.00" y1="141.00" x2="1530.00" y2="141.00" class="dim"/>
+<line x1="166.00" y1="145.00" x2="174.00" y2="137.00" class="dimtick"/>
+<line x1="1526.00" y1="145.00" x2="1534.00" y2="137.00" class="dimtick"/>
+<text x="850.00" y="136.00" class="dimtxt" text-anchor="middle">梁長 40,800</text>
+<line x1="170.00" y1="175.00" x2="183.33" y2="175.00" class="dim"/>
+<line x1="166.00" y1="179.00" x2="174.00" y2="171.00" class="dimtick"/>
+<line x1="179.33" y1="179.00" x2="187.33" y2="171.00" class="dimtick"/>
+<text x="164.00" y="179.00" class="dimtxt" text-anchor="end">400</text>
+<line x1="183.33" y1="175.00" x2="1516.67" y2="175.00" class="dim"/>
+<line x1="179.33" y1="179.00" x2="187.33" y2="171.00" class="dimtick"/>
+<line x1="1512.67" y1="179.00" x2="1520.67" y2="171.00" class="dimtick"/>
+<text x="850.00" y="170.00" class="dimtxt" text-anchor="middle">跨徑（支承中心距）40,000</text>
+<line x1="1516.67" y1="175.00" x2="1530.00" y2="175.00" class="dim"/>
+<line x1="1512.67" y1="179.00" x2="1520.67" y2="171.00" class="dimtick"/>
+<line x1="1526.00" y1="179.00" x2="1534.00" y2="171.00" class="dimtick"/>
+<text x="1536.00" y="179.00" class="dimtxt" text-anchor="start">400</text>
+<line x1="1533.00" y1="310.00" x2="1565.00" y2="310.00" class="dim"/>
+<line x1="1533.00" y1="240.00" x2="1565.00" y2="240.00" class="dim"/>
+<line x1="1560.00" y1="310.00" x2="1560.00" y2="240.00" class="dim"/>
+<line x1="1556.00" y1="314.00" x2="1564.00" y2="306.00" class="dimtick"/>
+<line x1="1556.00" y1="244.00" x2="1564.00" y2="236.00" class="dimtick"/>
+<text x="1566.00" y="279.50" class="dimtxt" text-anchor="start">2,100</text>
+<line x1="1560.00" y1="240.00" x2="1560.00" y2="231.67" class="dim"/>
+<line x1="1556.00" y1="244.00" x2="1564.00" y2="236.00" class="dimtick"/>
+<line x1="1556.00" y1="235.67" x2="1564.00" y2="227.67" class="dimtick"/>
+<text x="1566.00" y="240.33" class="dimtxt" text-anchor="start">50+200</text>
+<line x1="170.00" y1="355.00" x2="196.67" y2="355.00" class="dim"/>
+<line x1="166.00" y1="359.00" x2="174.00" y2="351.00" class="dimtick"/>
+<line x1="192.67" y1="359.00" x2="200.67" y2="351.00" class="dimtick"/>
+<text x="202.67" y="359.00" class="dimtxt" text-anchor="start">LN = 800（≥ 600）</text>
+<polyline points="169.25,275.00 126.67,320.00 116.67,320.00" class="leader"/>
+<text x="112.67" y="316.00" class="lbl2" text-anchor="end">梁端間隙 ≥ 45</text>
+<text x="430.00" y="448.00" class="vtitle" text-anchor="middle">標準橫斷面</text>
+<line x1="330.00" y1="455.00" x2="530.00" y2="455.00" class="vline"/>
+<text x="430.00" y="474.00" class="vscale" text-anchor="middle">S = 1:50</text>
+<rect x="70.00" y="712.00" width="720.00" height="16.00" class="cut"/>
+<rect x="110.00" y="706.00" width="640.00" height="6.00" class="cut2"/>
+<polygon points="70.00,712.00 110.00,712.00 110.00,706.00 98.00,685.60 86.00,644.00 70.00,644.00" class="cut"/>
+<polygon points="790.00,712.00 750.00,712.00 750.00,706.00 762.00,685.60 774.00,644.00 790.00,644.00" class="cut"/>
+<polygon points="114.00,900.00 170.00,900.00 170.00,884.00 152.00,868.00 152.00,752.00 182.00,744.00 182.00,732.00 102.00,732.00 102.00,744.00 132.00,752.00 132.00,868.00 114.00,884.00" class="cut"/>
+<rect x="102.00" y="728.00" width="80.00" height="4.00" class="cut2"/>
+<rect x="122.00" y="900.00" width="40.00" height="7.20" class="obj"/>
+<polygon points="306.00,900.00 362.00,900.00 362.00,884.00 344.00,868.00 344.00,752.00 374.00,744.00 374.00,732.00 294.00,732.00 294.00,744.00 324.00,752.00 324.00,868.00 306.00,884.00" class="cut"/>
+<rect x="294.00" y="728.00" width="80.00" height="4.00" class="cut2"/>
+<rect x="314.00" y="900.00" width="40.00" height="7.20" class="obj"/>
+<polygon points="498.00,900.00 554.00,900.00 554.00,884.00 536.00,868.00 536.00,752.00 566.00,744.00 566.00,732.00 486.00,732.00 486.00,744.00 516.00,752.00 516.00,868.00 498.00,884.00" class="cut"/>
+<rect x="486.00" y="728.00" width="80.00" height="4.00" class="cut2"/>
+<rect x="506.00" y="900.00" width="40.00" height="7.20" class="obj"/>
+<polygon points="690.00,900.00 746.00,900.00 746.00,884.00 728.00,868.00 728.00,752.00 758.00,744.00 758.00,732.00 678.00,732.00 678.00,744.00 708.00,752.00 708.00,868.00 690.00,884.00" class="cut"/>
+<rect x="678.00" y="728.00" width="80.00" height="4.00" class="cut2"/>
+<rect x="698.00" y="900.00" width="40.00" height="7.20" class="obj"/>
+<rect x="152.00" y="752.00" width="172.00" height="128.00" class="hid"/>
+<rect x="344.00" y="752.00" width="172.00" height="128.00" class="hid"/>
+<rect x="536.00" y="752.00" width="172.00" height="128.00" class="hid"/>
+<line x1="430.00" y1="568.00" x2="430.00" y2="932.00" class="cl"/>
+<text x="430.00" y="564.00" class="lbl2" text-anchor="middle">CL 橋梁中心</text>
+<text x="270.00" y="688.00" class="lbls" text-anchor="middle">車道 4,000</text>
+<text x="590.00" y="688.00" class="lbls" text-anchor="middle">車道 4,000</text>
+<line x1="70.00" y1="590.00" x2="790.00" y2="590.00" class="dim"/>
+<line x1="66.00" y1="594.00" x2="74.00" y2="586.00" class="dimtick"/>
+<line x1="786.00" y1="594.00" x2="794.00" y2="586.00" class="dimtick"/>
+<text x="430.00" y="585.00" class="dimtxt" text-anchor="middle">橋面寬 9,000</text>
+<line x1="70.00" y1="620.00" x2="110.00" y2="620.00" class="dim"/>
+<line x1="66.00" y1="624.00" x2="74.00" y2="616.00" class="dimtick"/>
+<line x1="106.00" y1="624.00" x2="114.00" y2="616.00" class="dimtick"/>
+<text x="64.00" y="624.00" class="dimtxt" text-anchor="end">500</text>
+<line x1="110.00" y1="620.00" x2="750.00" y2="620.00" class="dim"/>
+<line x1="106.00" y1="624.00" x2="114.00" y2="616.00" class="dimtick"/>
+<line x1="746.00" y1="624.00" x2="754.00" y2="616.00" class="dimtick"/>
+<text x="430.00" y="615.00" class="dimtxt" text-anchor="middle">路面 8,000</text>
+<line x1="750.00" y1="620.00" x2="790.00" y2="620.00" class="dim"/>
+<line x1="746.00" y1="624.00" x2="754.00" y2="616.00" class="dimtick"/>
+<line x1="786.00" y1="624.00" x2="794.00" y2="616.00" class="dimtick"/>
+<text x="796.00" y="624.00" class="dimtxt" text-anchor="start">500</text>
+<line x1="70.00" y1="940.00" x2="142.00" y2="940.00" class="dim"/>
+<line x1="66.00" y1="944.00" x2="74.00" y2="936.00" class="dimtick"/>
+<line x1="138.00" y1="944.00" x2="146.00" y2="936.00" class="dimtick"/>
+<text x="64.00" y="944.00" class="dimtxt" text-anchor="end">900</text>
+<line x1="142.00" y1="940.00" x2="334.00" y2="940.00" class="dim"/>
+<line x1="138.00" y1="944.00" x2="146.00" y2="936.00" class="dimtick"/>
+<line x1="330.00" y1="944.00" x2="338.00" y2="936.00" class="dimtick"/>
+<text x="238.00" y="935.00" class="dimtxt" text-anchor="middle">2,400</text>
+<line x1="334.00" y1="940.00" x2="526.00" y2="940.00" class="dim"/>
+<line x1="330.00" y1="944.00" x2="338.00" y2="936.00" class="dimtick"/>
+<line x1="522.00" y1="944.00" x2="530.00" y2="936.00" class="dimtick"/>
+<text x="430.00" y="935.00" class="dimtxt" text-anchor="middle">2,400</text>
+<line x1="526.00" y1="940.00" x2="718.00" y2="940.00" class="dim"/>
+<line x1="522.00" y1="944.00" x2="530.00" y2="936.00" class="dimtick"/>
+<line x1="714.00" y1="944.00" x2="722.00" y2="936.00" class="dimtick"/>
+<text x="622.00" y="935.00" class="dimtxt" text-anchor="middle">2,400</text>
+<line x1="718.00" y1="940.00" x2="790.00" y2="940.00" class="dim"/>
+<line x1="714.00" y1="944.00" x2="722.00" y2="936.00" class="dimtick"/>
+<line x1="786.00" y1="944.00" x2="794.00" y2="936.00" class="dimtick"/>
+<text x="796.00" y="944.00" class="dimtxt" text-anchor="start">900</text>
+<line x1="830.00" y1="900.00" x2="830.00" y2="732.00" class="dim"/>
+<line x1="826.00" y1="904.00" x2="834.00" y2="896.00" class="dimtick"/>
+<line x1="826.00" y1="736.00" x2="834.00" y2="728.00" class="dimtick"/>
+<text x="836.00" y="820.50" class="dimtxt" text-anchor="start">2,100</text>
+<line x1="830.00" y1="732.00" x2="830.00" y2="712.00" class="dim"/>
+<line x1="826.00" y1="736.00" x2="834.00" y2="728.00" class="dimtick"/>
+<line x1="826.00" y1="716.00" x2="834.00" y2="708.00" class="dimtick"/>
+<text x="836.00" y="726.50" class="dimtxt" text-anchor="start">50+200</text>
+<polyline points="334.00,812.00 394.00,812.00" class="leader"/>
+<text x="398.00" y="808.00" class="lbl2" text-anchor="start">PCI 梁（後拉）</text>
+<polyline points="766.00,680.00 810.00,652.00 812.40,652.00" class="leader"/>
+<text x="816.40" y="648.00" class="lbl2" text-anchor="start">混凝土護欄</text>
+<polyline points="566.00,708.80 582.00,656.00 586.00,656.00" class="leader"/>
+<text x="590.00" y="652.00" class="lbls" text-anchor="start">瀝青鋪面 75</text>
+<text x="430.00" y="988.00" class="lbls" text-anchor="middle">中隔梁僅設於跨中；梁端另設端隔梁</text>
+<text x="900.00" y="470.00" class="hdr" text-anchor="start">設計條件</text>
+<text x="900.00" y="496.00" class="note" text-anchor="start">1. 規範：交通部公路橋梁設計規範（98 年版及 104、109 年修訂）、</text>
+<text x="900.00" y="521.00" class="note" text-anchor="start">   公路橋梁耐震設計規範（107 年 12 月版）。</text>
+<text x="900.00" y="546.00" class="note" text-anchor="start">2. 活載重：HS20-44(MS18)；衝擊 I = 15.24/(L+38.1)，跨中 0.195。</text>
+<text x="900.00" y="571.00" class="note" text-anchor="start">3. 設計法：強度 1.3[D + 1.67(L+I)]；預力構件另檢核施工與使用應力。</text>
+<text x="900.00" y="596.00" class="note" text-anchor="start">4. 用途係數 I = 1.0；設計年限 50 年；一般環境（離海岸 &gt; 3 km）。</text>
+<text x="900.00" y="621.00" class="note" text-anchor="start">5. 橋址：台中市南屯區；第二類地盤（Vs30 取 180 m/s，無地質資料）。</text>
+<text x="900.00" y="646.00" class="note" text-anchor="start">   等級 II：SS = 0.92、S1 = 0.743（含近斷層 NA 1.15、NV 1.18）。</text>
+<text x="900.00" y="671.00" class="hdr" text-anchor="start">材料</text>
+<text x="900.00" y="696.00" class="note" text-anchor="start">6. 梁混凝土 f'c = 35 MPa，施預力時 f'ci ≥ 28 MPa；</text>
+<text x="900.00" y="721.00" class="note" text-anchor="start">   橋面版 f'c = 28 MPa；鋼筋 SD420W。</text>
+<text x="900.00" y="746.00" class="note" text-anchor="start">7. 預力鋼材：15.2 mm 七線低鬆弛鋼絞線，f's = 1860 MPa；</text>
+<text x="900.00" y="771.00" class="note" text-anchor="start">   4 束 × 10 股，套管內徑 85 mm，完成後全長灌漿。</text>
+<text x="900.00" y="796.00" class="note" text-anchor="start">8. 保護層：版頂 50、版底 35、梁箍筋 40 mm。</text>
+<text x="900.00" y="821.00" class="hdr" text-anchor="start">主要結果（每支梁）</text>
+<text x="900.00" y="846.00" class="note" text-anchor="start">9. Mu = 15,686 kN·m ≤ φMn = 19,894 kN·m（φ = 0.95）。</text>
+<text x="900.00" y="871.00" class="note" text-anchor="start">10. 使用載重梁底應力 +1.73 MPa ≤ 2.95 MPa。</text>
+<text x="900.00" y="896.00" class="note" text-anchor="start">11. 活載重撓度 10.8 mm ≤ L/800 = 50 mm。</text>
+<text x="900.00" y="921.00" class="note" text-anchor="start">12. 上部結構重 6,811 kN；止震塊每座橋台橫向 3,133 kN。</text></svg></div></section><section class="sheet" id="sheet-s02" aria-label="S-02 預力梁與鋼腱詳圖" hidden><div class="scroller"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 1188" width="1680" height="1188" role="img" aria-label="S-02 預力梁與鋼腱詳圖"><style>
+.paper{fill:var(--paper)}
+.frame{stroke:var(--ink);stroke-width:2.4;fill:none}
+.fthin{stroke:var(--ink);stroke-width:1;fill:none}
+.obj{stroke:var(--ink);stroke-width:1.5;fill:var(--conc)}
+.cut{stroke:var(--ink);stroke-width:1.5;fill:var(--cut)}
+.cut2{stroke:var(--ink);stroke-width:1.1;fill:var(--cut2)}
+.thin{stroke:var(--ink);stroke-width:.8;fill:none}
+.hid{stroke:var(--ink2);stroke-width:1;stroke-dasharray:7 4;fill:none}
+.cl{stroke:var(--ink2);stroke-width:.8;stroke-dasharray:22 4 3 4;fill:none}
+.dim{stroke:var(--dim);stroke-width:.8;fill:none}
+.dimtick{stroke:var(--dim);stroke-width:1.4}
+.dimtxt{fill:var(--dim);font:13px 'IBM Plex Mono','DejaVu Sans Mono',ui-monospace,monospace}
+.leader{stroke:var(--ink2);stroke-width:.8;fill:none}
+.lbl{fill:var(--ink);font:14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lbl2{fill:var(--ink2);font:13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lbls{fill:var(--ink2);font:12px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lblacc{fill:var(--acc);font:500 14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.vtitle{fill:var(--ink);font:600 18px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.vline{stroke:var(--ink);stroke-width:1.6}
+.vscale{fill:var(--ink2);font:13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tendon{stroke:var(--acc);stroke-width:1.8;fill:none}
+.tendon2{stroke:var(--acc);stroke-width:1.8;stroke-dasharray:10 4;fill:none}
+.duct{stroke:var(--acc);stroke-width:1.4;fill:var(--paper)}
+.ductc{fill:var(--acc)}
+.anchor{stroke:var(--acc);stroke-width:1.4;fill:var(--accbg)}
+.bar{stroke:var(--ink);stroke-width:1.3;fill:none}
+.barb{stroke:var(--acc);stroke-width:1.8;fill:none}
+.dot{fill:var(--ink)}
+.rubber{stroke:var(--ink);stroke-width:1;fill:var(--cut2)}
+.plate{stroke:var(--ink);stroke-width:.8;fill:var(--ink2)}
+.key{stroke:var(--ink);stroke-width:1.4;fill:var(--keybg)}
+.hatch{stroke:var(--ink2);stroke-width:.6}
+.brk{stroke:var(--ink);stroke-width:1;fill:none}
+.hdr{fill:var(--ink);font:600 15px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.note{fill:var(--ink);font:13.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.notes{fill:var(--ink2);font:12.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbk{fill:var(--ink2);font:12.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbv{fill:var(--ink);font:14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbvb{fill:var(--ink);font:600 17px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.stamp{fill:none;stroke:var(--stamp);stroke-width:2.4}
+.stamptxt{fill:var(--stamp);font:700 20px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif;letter-spacing:3px}
+.tbl{stroke:var(--ink2);stroke-width:.7;fill:none}
+.tbltxt{fill:var(--ink);font:13px 'IBM Plex Mono','DejaVu Sans Mono',ui-monospace,monospace}
+.tblhdr{fill:var(--ink);font:600 13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+</style><rect x="0.00" y="0.00" width="1680.00" height="1188.00" class="paper"/>
+<rect x="20.00" y="20.00" width="1640.00" height="1148.00" class="frame"/>
+<line x1="20.00" y1="1062.00" x2="1660.00" y2="1062.00" class="frame"/>
+<line x1="520.00" y1="1062.00" x2="520.00" y2="1168.00" class="fthin"/>
+<text x="32.00" y="1086.00" class="tbk" text-anchor="start">工程名稱</text>
+<text x="32.00" y="1120.00" class="tbv" text-anchor="start">40 m 簡支後拉預力 I 型梁橋（示範設計）</text>
+<line x1="1000.00" y1="1062.00" x2="1000.00" y2="1168.00" class="fthin"/>
+<text x="532.00" y="1086.00" class="tbk" text-anchor="start">圖名</text>
+<text x="532.00" y="1120.00" class="tbvb" text-anchor="start">預力梁與鋼腱詳圖</text>
+<line x1="1150.00" y1="1062.00" x2="1150.00" y2="1168.00" class="fthin"/>
+<text x="1012.00" y="1086.00" class="tbk" text-anchor="start">圖號</text>
+<text x="1012.00" y="1120.00" class="tbvb" text-anchor="start">S-02</text>
+<line x1="1330.00" y1="1062.00" x2="1330.00" y2="1168.00" class="fthin"/>
+<text x="1162.00" y="1086.00" class="tbk" text-anchor="start">比例</text>
+<text x="1162.00" y="1120.00" class="tbv" text-anchor="start">如圖示</text>
+<line x1="1660.00" y1="1062.00" x2="1660.00" y2="1168.00" class="fthin"/>
+<text x="1342.00" y="1086.00" class="tbk" text-anchor="start">依據</text>
+<text x="1342.00" y="1120.00" class="tbv" text-anchor="start">交通部公路橋梁設計規範、耐震設計規範</text>
+<text x="32.00" y="1154.00" class="tbk" text-anchor="start">所有尺寸以 mm 計，高程與座標自梁底、梁端起算；本圖由程式自計算結果產生。</text>
+<text x="1342.00" y="1154.00" class="tbk" text-anchor="start">2026-10-23　設計：AI 示範（未經技師簽證）</text>
+<rect x="1415.00" y="30.00" width="230.00" height="44.00" class="stamp"/>
+<text x="1530.00" y="60.00" class="stamptxt" text-anchor="middle">示範・非施工圖</text>
+<text x="800.00" y="58.00" class="vtitle" text-anchor="middle">預力梁半立面與鋼腱線形</text>
+<line x1="635.00" y1="65.00" x2="965.00" y2="65.00" class="vline"/>
+<text x="800.00" y="84.00" class="vscale" text-anchor="middle">水平 S = 1:60、垂直 S = 1:30（垂直放大 2 倍）</text>
+<rect x="120.00" y="120.00" width="1360.00" height="280.00" class="obj"/>
+<line x1="120.00" y1="140.00" x2="1480.00" y2="140.00" class="hid"/>
+<line x1="300.00" y1="346.67" x2="1480.00" y2="346.67" class="hid"/>
+<line x1="200.00" y1="366.67" x2="200.00" y2="153.33" class="hid"/>
+<line x1="300.00" y1="346.67" x2="300.00" y2="153.33" class="hid"/>
+<rect x="1471.67" y="153.33" width="8.33" height="213.33" class="hid"/>
+<line x1="1480.00" y1="100.00" x2="1480.00" y2="440.00" class="cl"/>
+<text x="1474.00" y="112.00" class="lbl2" text-anchor="end">CL 跨中</text>
+<rect x="135.00" y="400.00" width="23.33" height="12.00" class="obj"/>
+<polyline points="120.00,180.00 131.33,183.05 142.67,186.08 154.00,189.09 165.33,192.06 176.67,195.01 188.00,197.94 199.33,200.84 210.67,203.72 222.00,206.56 233.33,209.39 244.67,212.19 256.00,214.96 267.33,217.71 278.67,220.43 290.00,223.12 301.33,225.80 312.67,228.44 324.00,231.06 335.33,233.65 346.67,236.22 358.00,238.77 369.33,241.28 380.67,243.77 392.00,246.24 403.33,248.68 414.67,251.10 426.00,253.48 437.33,255.85 448.67,258.19 460.00,260.50 471.33,262.79 482.67,265.05 494.00,267.28 505.33,269.50 516.67,271.68 528.00,273.84 539.33,275.97 550.67,278.08 562.00,280.16 573.33,282.22 584.67,284.25 596.00,286.26 607.33,288.24 618.67,290.20 630.00,292.12 641.33,294.03 652.67,295.91 664.00,297.76 675.33,299.59 686.67,301.39 698.00,303.17 709.33,304.92 720.67,306.64 732.00,308.34 743.33,310.01 754.67,311.66 766.00,313.29 777.33,314.88 788.67,316.45 800.00,318.00 811.33,319.52 822.67,321.02 834.00,322.49 845.33,323.93 856.67,325.35 868.00,326.74 879.33,328.11 890.67,329.45 902.00,330.76 913.33,332.06 924.67,333.32 936.00,334.56 947.33,335.77 958.67,336.96 970.00,338.12 981.33,339.26 992.67,340.37 1004.00,341.46 1015.33,342.52 1026.67,343.56 1038.00,344.56 1049.33,345.55 1060.67,346.51 1072.00,347.44 1083.33,348.35 1094.67,349.23 1106.00,350.08 1117.33,350.92 1128.67,351.72 1140.00,352.50 1151.33,353.25 1162.67,353.98 1174.00,354.69 1185.33,355.36 1196.67,356.01 1208.00,356.64 1219.33,357.24 1230.67,357.82 1242.00,358.37 1253.33,358.89 1264.67,359.39 1276.00,359.86 1287.33,360.31 1298.67,360.73 1310.00,361.12 1321.33,361.50 1332.67,361.84 1344.00,362.16 1355.33,362.45 1366.67,362.72 1378.00,362.97 1389.33,363.18 1400.67,363.37 1412.00,363.54 1423.33,363.68 1434.67,363.80 1446.00,363.88 1457.33,363.95 1468.67,363.99 1480.00,364.00" class="tendon"/>
+<rect x="114.00" y="162.00" width="6.00" height="36.00" class="anchor"/>
+<text x="108.00" y="185.00" class="lblacc" text-anchor="end">T1</text>
+<polyline points="120.00,233.33 131.33,235.50 142.67,237.65 154.00,239.78 165.33,241.90 176.67,244.00 188.00,246.07 199.33,248.13 210.67,250.17 222.00,252.20 233.33,254.20 244.67,256.19 256.00,258.16 267.33,260.11 278.67,262.04 290.00,263.96 301.33,265.85 312.67,267.73 324.00,269.59 335.33,271.44 346.67,273.26 358.00,275.06 369.33,276.85 380.67,278.62 392.00,280.37 403.33,282.11 414.67,283.82 426.00,285.52 437.33,287.20 448.67,288.86 460.00,290.50 471.33,292.12 482.67,293.73 494.00,295.32 505.33,296.89 516.67,298.44 528.00,299.97 539.33,301.49 550.67,302.99 562.00,304.46 573.33,305.93 584.67,307.37 596.00,308.79 607.33,310.20 618.67,311.59 630.00,312.96 641.33,314.31 652.67,315.64 664.00,316.96 675.33,318.26 686.67,319.54 698.00,320.80 709.33,322.04 720.67,323.27 732.00,324.47 743.33,325.66 754.67,326.83 766.00,327.99 777.33,329.12 788.67,330.24 800.00,331.33 811.33,332.41 822.67,333.47 834.00,334.52 845.33,335.54 856.67,336.55 868.00,337.54 879.33,338.51 890.67,339.46 902.00,340.40 913.33,341.31 924.67,342.21 936.00,343.09 947.33,343.96 958.67,344.80 970.00,345.62 981.33,346.43 992.67,347.22 1004.00,347.99 1015.33,348.75 1026.67,349.48 1038.00,350.20 1049.33,350.90 1060.67,351.58 1072.00,352.24 1083.33,352.88 1094.67,353.51 1106.00,354.12 1117.33,354.71 1128.67,355.28 1140.00,355.83 1151.33,356.37 1162.67,356.89 1174.00,357.38 1185.33,357.87 1196.67,358.33 1208.00,358.77 1219.33,359.20 1230.67,359.61 1242.00,360.00 1253.33,360.37 1264.67,360.72 1276.00,361.06 1287.33,361.38 1298.67,361.68 1310.00,361.96 1321.33,362.22 1332.67,362.47 1344.00,362.69 1355.33,362.90 1366.67,363.09 1378.00,363.26 1389.33,363.42 1400.67,363.56 1412.00,363.67 1423.33,363.77 1434.67,363.85 1446.00,363.92 1457.33,363.96 1468.67,363.99 1480.00,364.00" class="tendon"/>
+<rect x="114.00" y="215.33" width="6.00" height="36.00" class="anchor"/>
+<text x="108.00" y="238.33" class="lblacc" text-anchor="end">T2</text>
+<polyline points="120.00,286.67 131.33,288.26 142.67,289.84 154.00,291.41 165.33,292.96 176.67,294.50 188.00,296.03 199.33,297.54 210.67,299.04 222.00,300.53 233.33,302.00 244.67,303.46 256.00,304.91 267.33,306.34 278.67,307.76 290.00,309.17 301.33,310.56 312.67,311.94 324.00,313.31 335.33,314.66 346.67,316.00 358.00,317.33 369.33,318.64 380.67,319.94 392.00,321.23 403.33,322.50 414.67,323.76 426.00,325.01 437.33,326.24 448.67,327.46 460.00,328.67 471.33,329.86 482.67,331.04 494.00,332.21 505.33,333.36 516.67,334.50 528.00,335.63 539.33,336.74 550.67,337.84 562.00,338.93 573.33,340.00 584.67,341.06 596.00,342.11 607.33,343.14 618.67,344.16 630.00,345.17 641.33,346.16 652.67,347.14 664.00,348.11 675.33,349.06 686.67,350.00 698.00,350.93 709.33,351.84 720.67,352.74 732.00,353.63 743.33,354.50 754.67,355.36 766.00,356.21 777.33,357.04 788.67,357.86 800.00,358.67 811.33,359.46 822.67,360.24 834.00,361.01 845.33,361.76 856.67,362.50 868.00,363.23 879.33,363.94 890.67,364.64 902.00,365.33 913.33,366.00 924.67,366.66 936.00,367.31 947.33,367.94 958.67,368.56 970.00,369.17 981.33,369.76 992.67,370.34 1004.00,370.91 1015.33,371.46 1026.67,372.00 1038.00,372.53 1049.33,373.04 1060.67,373.54 1072.00,374.03 1083.33,374.50 1094.67,374.96 1106.00,375.41 1117.33,375.84 1128.67,376.26 1140.00,376.67 1151.33,377.06 1162.67,377.44 1174.00,377.81 1185.33,378.16 1196.67,378.50 1208.00,378.83 1219.33,379.14 1230.67,379.44 1242.00,379.73 1253.33,380.00 1264.67,380.26 1276.00,380.51 1287.33,380.74 1298.67,380.96 1310.00,381.17 1321.33,381.36 1332.67,381.54 1344.00,381.71 1355.33,381.86 1366.67,382.00 1378.00,382.13 1389.33,382.24 1400.67,382.34 1412.00,382.43 1423.33,382.50 1434.67,382.56 1446.00,382.61 1457.33,382.64 1468.67,382.66 1480.00,382.67" class="tendon"/>
+<rect x="114.00" y="268.67" width="6.00" height="36.00" class="anchor"/>
+<text x="108.00" y="291.67" class="lblacc" text-anchor="end">T3</text>
+<polyline points="120.00,340.00 131.33,340.71 142.67,341.41 154.00,342.11 165.33,342.80 176.67,343.48 188.00,344.16 199.33,344.83 210.67,345.50 222.00,346.16 233.33,346.81 244.67,347.46 256.00,348.11 267.33,348.74 278.67,349.37 290.00,350.00 301.33,350.62 312.67,351.23 324.00,351.84 335.33,352.44 346.67,353.04 358.00,353.63 369.33,354.21 380.67,354.79 392.00,355.36 403.33,355.93 414.67,356.49 426.00,357.04 437.33,357.59 448.67,358.13 460.00,358.67 471.33,359.20 482.67,359.72 494.00,360.24 505.33,360.75 516.67,361.26 528.00,361.76 539.33,362.25 550.67,362.74 562.00,363.23 573.33,363.70 584.67,364.17 596.00,364.64 607.33,365.10 618.67,365.55 630.00,366.00 641.33,366.44 652.67,366.88 664.00,367.31 675.33,367.73 686.67,368.15 698.00,368.56 709.33,368.97 720.67,369.37 732.00,369.76 743.33,370.15 754.67,370.53 766.00,370.91 777.33,371.28 788.67,371.64 800.00,372.00 811.33,372.35 822.67,372.70 834.00,373.04 845.33,373.37 856.67,373.70 868.00,374.03 879.33,374.34 890.67,374.65 902.00,374.96 913.33,375.26 924.67,375.55 936.00,375.84 947.33,376.12 958.67,376.40 970.00,376.67 981.33,376.93 992.67,377.19 1004.00,377.44 1015.33,377.69 1026.67,377.93 1038.00,378.16 1049.33,378.39 1060.67,378.61 1072.00,378.83 1083.33,379.04 1094.67,379.24 1106.00,379.44 1117.33,379.63 1128.67,379.82 1140.00,380.00 1151.33,380.17 1162.67,380.34 1174.00,380.51 1185.33,380.66 1196.67,380.81 1208.00,380.96 1219.33,381.10 1230.67,381.23 1242.00,381.36 1253.33,381.48 1264.67,381.60 1276.00,381.71 1287.33,381.81 1298.67,381.91 1310.00,382.00 1321.33,382.09 1332.67,382.17 1344.00,382.24 1355.33,382.31 1366.67,382.37 1378.00,382.43 1389.33,382.48 1400.67,382.52 1412.00,382.56 1423.33,382.59 1434.67,382.62 1446.00,382.64 1457.33,382.65 1468.67,382.66 1480.00,382.67" class="tendon"/>
+<rect x="114.00" y="322.00" width="6.00" height="36.00" class="anchor"/>
+<text x="108.00" y="345.00" class="lblacc" text-anchor="end">T4</text>
+<line x1="120.00" y1="404.00" x2="120.00" y2="412.00" class="thin"/>
+<text x="120.00" y="428.00" class="lbls" text-anchor="middle">0</text>
+<line x1="253.33" y1="404.00" x2="253.33" y2="412.00" class="thin"/>
+<text x="253.33" y="428.00" class="lbls" text-anchor="middle">2</text>
+<line x1="386.67" y1="404.00" x2="386.67" y2="412.00" class="thin"/>
+<text x="386.67" y="428.00" class="lbls" text-anchor="middle">4</text>
+<line x1="520.00" y1="404.00" x2="520.00" y2="412.00" class="thin"/>
+<text x="520.00" y="428.00" class="lbls" text-anchor="middle">6</text>
+<line x1="653.33" y1="404.00" x2="653.33" y2="412.00" class="thin"/>
+<text x="653.33" y="428.00" class="lbls" text-anchor="middle">8</text>
+<line x1="786.67" y1="404.00" x2="786.67" y2="412.00" class="thin"/>
+<text x="786.67" y="428.00" class="lbls" text-anchor="middle">10</text>
+<line x1="920.00" y1="404.00" x2="920.00" y2="412.00" class="thin"/>
+<text x="920.00" y="428.00" class="lbls" text-anchor="middle">12</text>
+<line x1="1053.33" y1="404.00" x2="1053.33" y2="412.00" class="thin"/>
+<text x="1053.33" y="428.00" class="lbls" text-anchor="middle">14</text>
+<line x1="1186.67" y1="404.00" x2="1186.67" y2="412.00" class="thin"/>
+<text x="1186.67" y="428.00" class="lbls" text-anchor="middle">16</text>
+<line x1="1320.00" y1="404.00" x2="1320.00" y2="412.00" class="thin"/>
+<text x="1320.00" y="428.00" class="lbls" text-anchor="middle">18</text>
+<line x1="1453.33" y1="404.00" x2="1453.33" y2="412.00" class="thin"/>
+<text x="1453.33" y="428.00" class="lbls" text-anchor="middle">20</text>
+<text x="1494.00" y="428.00" class="lbls" text-anchor="start">x（m，自梁端）</text>
+<line x1="120.00" y1="98.00" x2="200.00" y2="98.00" class="dim"/>
+<line x1="116.00" y1="102.00" x2="124.00" y2="94.00" class="dimtick"/>
+<line x1="196.00" y1="102.00" x2="204.00" y2="94.00" class="dimtick"/>
+<text x="206.00" y="102.00" class="dimtxt" text-anchor="start">端塊 1,200</text>
+<line x1="200.00" y1="74.00" x2="300.00" y2="74.00" class="dim"/>
+<line x1="196.00" y1="78.00" x2="204.00" y2="70.00" class="dimtick"/>
+<line x1="296.00" y1="78.00" x2="304.00" y2="70.00" class="dimtick"/>
+<text x="306.00" y="78.00" class="dimtxt" text-anchor="start">漸變 1,500</text>
+<line x1="76.00" y1="400.00" x2="76.00" y2="120.00" class="dim"/>
+<line x1="72.00" y1="404.00" x2="80.00" y2="396.00" class="dimtick"/>
+<line x1="72.00" y1="124.00" x2="80.00" y2="116.00" class="dimtick"/>
+<text x="70.00" y="264.50" class="dimtxt" text-anchor="end">2,100</text>
+<polyline points="1200.00,356.00 1240.00,280.00 1280.00,280.00" class="leader"/>
+<text x="1284.00" y="276.00" class="lbls" text-anchor="start">鋼腱於 x ≈ 14–18 m 進入底翼並側移至 ±150</text>
+<text x="120.00" y="452.00" class="hdr" text-anchor="start">鋼腱中心高度（mm，自梁底；左右對稱）</text>
+<text x="166.00" y="477.50" class="tblhdr" text-anchor="middle">x (m)</text>
+<text x="259.00" y="477.50" class="tblhdr" text-anchor="middle">0</text>
+<text x="353.00" y="477.50" class="tblhdr" text-anchor="middle">2</text>
+<text x="447.00" y="477.50" class="tblhdr" text-anchor="middle">4</text>
+<text x="541.00" y="477.50" class="tblhdr" text-anchor="middle">6</text>
+<text x="635.00" y="477.50" class="tblhdr" text-anchor="middle">8</text>
+<text x="729.00" y="477.50" class="tblhdr" text-anchor="middle">10</text>
+<text x="823.00" y="477.50" class="tblhdr" text-anchor="middle">12</text>
+<text x="917.00" y="477.50" class="tblhdr" text-anchor="middle">14</text>
+<text x="1011.00" y="477.50" class="tblhdr" text-anchor="middle">16</text>
+<text x="1105.00" y="477.50" class="tblhdr" text-anchor="middle">18</text>
+<text x="1199.00" y="477.50" class="tblhdr" text-anchor="middle">20</text>
+<text x="1293.00" y="477.50" class="tblhdr" text-anchor="middle">20.4</text>
+<text x="166.00" y="498.50" class="tblhdr" text-anchor="middle">T1</text>
+<text x="259.00" y="498.50" class="tbltxt" text-anchor="middle">1,650</text>
+<text x="353.00" y="498.50" class="tbltxt" text-anchor="middle">1,393</text>
+<text x="447.00" y="498.50" class="tbltxt" text-anchor="middle">1,162</text>
+<text x="541.00" y="498.50" class="tbltxt" text-anchor="middle">958</text>
+<text x="635.00" y="498.50" class="tbltxt" text-anchor="middle">780</text>
+<text x="729.00" y="498.50" class="tbltxt" text-anchor="middle">629</text>
+<text x="823.00" y="498.50" class="tbltxt" text-anchor="middle">504</text>
+<text x="917.00" y="498.50" class="tbltxt" text-anchor="middle">406</text>
+<text x="1011.00" y="498.50" class="tbltxt" text-anchor="middle">334</text>
+<text x="1105.00" y="498.50" class="tbltxt" text-anchor="middle">289</text>
+<text x="1199.00" y="498.50" class="tbltxt" text-anchor="middle">271</text>
+<text x="1293.00" y="498.50" class="tbltxt" text-anchor="middle">270</text>
+<text x="166.00" y="519.50" class="tblhdr" text-anchor="middle">T2</text>
+<text x="259.00" y="519.50" class="tbltxt" text-anchor="middle">1,250</text>
+<text x="353.00" y="519.50" class="tbltxt" text-anchor="middle">1,067</text>
+<text x="447.00" y="519.50" class="tbltxt" text-anchor="middle">903</text>
+<text x="541.00" y="519.50" class="tbltxt" text-anchor="middle">758</text>
+<text x="635.00" y="519.50" class="tbltxt" text-anchor="middle">632</text>
+<text x="729.00" y="519.50" class="tbltxt" text-anchor="middle">525</text>
+<text x="823.00" y="519.50" class="tbltxt" text-anchor="middle">436</text>
+<text x="917.00" y="519.50" class="tbltxt" text-anchor="middle">366</text>
+<text x="1011.00" y="519.50" class="tbltxt" text-anchor="middle">316</text>
+<text x="1105.00" y="519.50" class="tbltxt" text-anchor="middle">284</text>
+<text x="1199.00" y="519.50" class="tbltxt" text-anchor="middle">270</text>
+<text x="1293.00" y="519.50" class="tbltxt" text-anchor="middle">270</text>
+<text x="166.00" y="540.50" class="tblhdr" text-anchor="middle">T3</text>
+<text x="259.00" y="540.50" class="tbltxt" text-anchor="middle">850</text>
+<text x="353.00" y="540.50" class="tbltxt" text-anchor="middle">716</text>
+<text x="447.00" y="540.50" class="tbltxt" text-anchor="middle">595</text>
+<text x="541.00" y="540.50" class="tbltxt" text-anchor="middle">489</text>
+<text x="635.00" y="540.50" class="tbltxt" text-anchor="middle">396</text>
+<text x="729.00" y="540.50" class="tbltxt" text-anchor="middle">317</text>
+<text x="823.00" y="540.50" class="tbltxt" text-anchor="middle">252</text>
+<text x="917.00" y="540.50" class="tbltxt" text-anchor="middle">201</text>
+<text x="1011.00" y="540.50" class="tbltxt" text-anchor="middle">163</text>
+<text x="1105.00" y="540.50" class="tbltxt" text-anchor="middle">140</text>
+<text x="1199.00" y="540.50" class="tbltxt" text-anchor="middle">130</text>
+<text x="1293.00" y="540.50" class="tbltxt" text-anchor="middle">130</text>
+<text x="166.00" y="561.50" class="tblhdr" text-anchor="middle">T4</text>
+<text x="259.00" y="561.50" class="tbltxt" text-anchor="middle">450</text>
+<text x="353.00" y="561.50" class="tbltxt" text-anchor="middle">390</text>
+<text x="447.00" y="561.50" class="tbltxt" text-anchor="middle">337</text>
+<text x="541.00" y="561.50" class="tbltxt" text-anchor="middle">289</text>
+<text x="635.00" y="561.50" class="tbltxt" text-anchor="middle">248</text>
+<text x="729.00" y="561.50" class="tbltxt" text-anchor="middle">213</text>
+<text x="823.00" y="561.50" class="tbltxt" text-anchor="middle">184</text>
+<text x="917.00" y="561.50" class="tbltxt" text-anchor="middle">161</text>
+<text x="1011.00" y="561.50" class="tbltxt" text-anchor="middle">145</text>
+<text x="1105.00" y="561.50" class="tbltxt" text-anchor="middle">134</text>
+<text x="1199.00" y="561.50" class="tbltxt" text-anchor="middle">130</text>
+<text x="1293.00" y="561.50" class="tbltxt" text-anchor="middle">130</text>
+<rect x="120.00" y="462.00" width="1220.00" height="105.00" class="tbl"/>
+<line x1="120.00" y1="483.00" x2="1340.00" y2="483.00" class="tbl"/>
+<line x1="120.00" y1="504.00" x2="1340.00" y2="504.00" class="tbl"/>
+<line x1="120.00" y1="525.00" x2="1340.00" y2="525.00" class="tbl"/>
+<line x1="120.00" y1="546.00" x2="1340.00" y2="546.00" class="tbl"/>
+<line x1="212.00" y1="462.00" x2="212.00" y2="567.00" class="tbl"/>
+<line x1="306.00" y1="462.00" x2="306.00" y2="567.00" class="tbl"/>
+<line x1="400.00" y1="462.00" x2="400.00" y2="567.00" class="tbl"/>
+<line x1="494.00" y1="462.00" x2="494.00" y2="567.00" class="tbl"/>
+<line x1="588.00" y1="462.00" x2="588.00" y2="567.00" class="tbl"/>
+<line x1="682.00" y1="462.00" x2="682.00" y2="567.00" class="tbl"/>
+<line x1="776.00" y1="462.00" x2="776.00" y2="567.00" class="tbl"/>
+<line x1="870.00" y1="462.00" x2="870.00" y2="567.00" class="tbl"/>
+<line x1="964.00" y1="462.00" x2="964.00" y2="567.00" class="tbl"/>
+<line x1="1058.00" y1="462.00" x2="1058.00" y2="567.00" class="tbl"/>
+<line x1="1152.00" y1="462.00" x2="1152.00" y2="567.00" class="tbl"/>
+<line x1="1246.00" y1="462.00" x2="1246.00" y2="567.00" class="tbl"/>
+<text x="250.00" y="612.00" class="vtitle" text-anchor="middle">斷面 A-A（跨中）S = 1:25</text>
+<line x1="115.00" y1="619.00" x2="385.00" y2="619.00" class="vline"/>
+<polygon points="194.00,1010.00 306.00,1010.00 306.00,978.00 270.00,946.00 270.00,714.00 330.00,698.00 330.00,674.00 170.00,674.00 170.00,698.00 230.00,714.00 230.00,946.00 194.00,978.00" class="cut"/>
+<polygon points="200.40,1003.60 299.60,1003.60 299.60,981.20 263.60,949.20 263.60,680.40 236.40,680.40 236.40,949.20 200.40,981.20" class="bar"/>
+<circle cx="226.00" cy="966.80" r="7.36" class="duct"/>
+<circle cx="226.00" cy="968.72" r="3.20" class="ductc"/>
+<circle cx="274.00" cy="966.80" r="7.36" class="duct"/>
+<circle cx="274.00" cy="968.72" r="3.20" class="ductc"/>
+<circle cx="226.00" cy="989.20" r="7.36" class="duct"/>
+<circle cx="226.00" cy="991.12" r="3.20" class="ductc"/>
+<circle cx="274.00" cy="989.20" r="7.36" class="duct"/>
+<circle cx="274.00" cy="991.12" r="3.20" class="ductc"/>
+<circle cx="178.00" cy="681.68" r="2.60" class="dot"/>
+<circle cx="202.00" cy="681.68" r="2.60" class="dot"/>
+<circle cx="226.00" cy="681.68" r="2.60" class="dot"/>
+<circle cx="250.00" cy="681.68" r="2.60" class="dot"/>
+<circle cx="274.00" cy="681.68" r="2.60" class="dot"/>
+<circle cx="298.00" cy="681.68" r="2.60" class="dot"/>
+<circle cx="322.00" cy="681.68" r="2.60" class="dot"/>
+<circle cx="203.60" cy="1002.32" r="2.60" class="dot"/>
+<circle cx="296.40" cy="1002.32" r="2.60" class="dot"/>
+<line x1="170.00" y1="658.00" x2="330.00" y2="658.00" class="dim"/>
+<line x1="166.00" y1="662.00" x2="174.00" y2="654.00" class="dimtick"/>
+<line x1="326.00" y1="662.00" x2="334.00" y2="654.00" class="dimtick"/>
+<text x="250.00" y="653.00" class="dimtxt" text-anchor="middle">1,000</text>
+<line x1="194.00" y1="1036.00" x2="306.00" y2="1036.00" class="dim"/>
+<line x1="190.00" y1="1040.00" x2="198.00" y2="1032.00" class="dimtick"/>
+<line x1="302.00" y1="1040.00" x2="310.00" y2="1032.00" class="dimtick"/>
+<text x="250.00" y="1031.00" class="dimtxt" text-anchor="middle">700</text>
+<line x1="148.00" y1="1010.00" x2="148.00" y2="674.00" class="dim"/>
+<line x1="144.00" y1="1014.00" x2="152.00" y2="1006.00" class="dimtick"/>
+<line x1="144.00" y1="678.00" x2="152.00" y2="670.00" class="dimtick"/>
+<text x="142.00" y="846.50" class="dimtxt" text-anchor="end">2,100</text>
+<polyline points="274.00,966.80 317.20,920.40 322.00,920.40" class="leader"/>
+<text x="326.00" y="916.40" class="lbls" text-anchor="start">套管 ID 85</text>
+<polyline points="230.00,834.00 197.20,802.00 192.40,802.00" class="leader"/>
+<text x="188.40" y="798.00" class="lbls" text-anchor="end">腹板 250</text>
+<polyline points="263.60,866.00 302.80,850.00 307.60,850.00" class="leader"/>
+<text x="311.60" y="846.00" class="lbls" text-anchor="start">D13 箍筋</text>
+<polyline points="298.00,681.68 339.60,722.00 344.40,722.00" class="leader"/>
+<text x="348.40" y="718.00" class="lbls" text-anchor="start">頂翼 7-D16</text>
+<text x="560.00" y="612.00" class="vtitle" text-anchor="middle">斷面 B-B（端塊）S = 1:25</text>
+<line x1="425.00" y1="619.00" x2="695.00" y2="619.00" class="vline"/>
+<polygon points="504.00,1010.00 616.00,1010.00 616.00,714.00 640.00,698.00 640.00,674.00 480.00,674.00 480.00,698.00 504.00,714.00" class="cut"/>
+<polygon points="510.40,1003.60 609.60,1003.60 609.60,680.40 510.40,680.40" class="barb"/>
+<circle cx="560.00" cy="758.80" r="7.36" class="duct"/>
+<circle cx="560.00" cy="819.09" r="7.36" class="duct"/>
+<circle cx="560.00" cy="880.68" r="7.36" class="duct"/>
+<circle cx="560.00" cy="940.97" r="7.36" class="duct"/>
+<line x1="504.00" y1="1036.00" x2="616.00" y2="1036.00" class="dim"/>
+<line x1="500.00" y1="1040.00" x2="508.00" y2="1032.00" class="dimtick"/>
+<line x1="612.00" y1="1040.00" x2="620.00" y2="1032.00" class="dimtick"/>
+<text x="560.00" y="1031.00" class="dimtxt" text-anchor="middle">700</text>
+<polyline points="609.60,802.00 643.20,778.00 646.40,778.00" class="leader"/>
+<text x="650.40" y="774.00" class="lbls" text-anchor="start">爆裂筋 D16 閉合箍</text>
+<text x="560.00" y="1048.00" class="lbls" text-anchor="middle">（距梁端 0.6 m）</text>
+<text x="870.00" y="612.00" class="vtitle" text-anchor="middle">梁端面錨碇配置 S = 1:25</text>
+<line x1="735.00" y1="619.00" x2="1005.00" y2="619.00" class="vline"/>
+<polygon points="814.00,1010.00 926.00,1010.00 926.00,714.00 950.00,698.00 950.00,674.00 790.00,674.00 790.00,698.00 814.00,714.00" class="obj"/>
+<rect x="848.40" y="724.40" width="43.20" height="43.20" class="anchor"/>
+<circle cx="870.00" cy="746.00" r="7.36" class="duct"/>
+<text x="934.00" y="751.00" class="tbltxt" text-anchor="start">T1  1,650</text>
+<rect x="848.40" y="788.40" width="43.20" height="43.20" class="anchor"/>
+<circle cx="870.00" cy="810.00" r="7.36" class="duct"/>
+<text x="934.00" y="815.00" class="tbltxt" text-anchor="start">T2  1,250</text>
+<rect x="848.40" y="852.40" width="43.20" height="43.20" class="anchor"/>
+<circle cx="870.00" cy="874.00" r="7.36" class="duct"/>
+<text x="934.00" y="879.00" class="tbltxt" text-anchor="start">T3  850</text>
+<rect x="848.40" y="916.40" width="43.20" height="43.20" class="anchor"/>
+<circle cx="870.00" cy="938.00" r="7.36" class="duct"/>
+<text x="934.00" y="943.00" class="tbltxt" text-anchor="start">T4  450</text>
+<line x1="794.00" y1="1010.00" x2="794.00" y2="938.00" class="dim"/>
+<line x1="790.00" y1="1014.00" x2="798.00" y2="1006.00" class="dimtick"/>
+<line x1="790.00" y1="942.00" x2="798.00" y2="934.00" class="dimtick"/>
+<text x="788.00" y="978.50" class="dimtxt" text-anchor="end">450</text>
+<line x1="794.00" y1="938.00" x2="794.00" y2="874.00" class="dim"/>
+<line x1="790.00" y1="942.00" x2="798.00" y2="934.00" class="dimtick"/>
+<line x1="790.00" y1="878.00" x2="798.00" y2="870.00" class="dimtick"/>
+<text x="788.00" y="910.50" class="dimtxt" text-anchor="end">400</text>
+<line x1="794.00" y1="874.00" x2="794.00" y2="810.00" class="dim"/>
+<line x1="790.00" y1="878.00" x2="798.00" y2="870.00" class="dimtick"/>
+<line x1="790.00" y1="814.00" x2="798.00" y2="806.00" class="dimtick"/>
+<text x="788.00" y="846.50" class="dimtxt" text-anchor="end">400</text>
+<line x1="794.00" y1="810.00" x2="794.00" y2="746.00" class="dim"/>
+<line x1="790.00" y1="814.00" x2="798.00" y2="806.00" class="dimtick"/>
+<line x1="790.00" y1="750.00" x2="798.00" y2="742.00" class="dimtick"/>
+<text x="788.00" y="782.50" class="dimtxt" text-anchor="end">400</text>
+<text x="870.00" y="1048.00" class="lbls" text-anchor="middle">承壓板 270×270（廠商特殊錨碇＋螺旋筋）</text>
+<text x="1060.00" y="650.00" class="hdr" text-anchor="start">預力施工說明</text>
+<text x="1060.00" y="676.00" class="note" text-anchor="start">1. 4 束 × 10 股 15.2 mm 低鬆弛鋼絞線，Aps = 5,600 mm²。</text>
+<text x="1060.00" y="700.00" class="note" text-anchor="start">2. 單端張拉、左右交替，依 T1→T2→T3→T4 順序。</text>
+<text x="1060.00" y="724.00" class="note" text-anchor="start">   T1：左端張拉 1429 MPa（0.768 f's），伸長約 281 mm</text>
+<text x="1060.00" y="748.00" class="note" text-anchor="start">   T2：右端張拉 1418 MPa（0.762 f's），伸長約 282 mm</text>
+<text x="1060.00" y="772.00" class="note" text-anchor="start">   T3：左端張拉 1411 MPa（0.758 f's），伸長約 282 mm</text>
+<text x="1060.00" y="796.00" class="note" text-anchor="start">   T4：右端張拉 1399 MPa（0.752 f's），伸長約 282 mm</text>
+<text x="1060.00" y="820.00" class="note" text-anchor="start">3. 錨碇滑動 6 mm；錨碇後端錨 ≤ 0.70 f's、</text>
+<text x="1060.00" y="844.00" class="note" text-anchor="start">   滑動影響範圍末端 ≤ 0.83 fy*（8.15.1）。</text>
+<text x="1060.00" y="868.00" class="note" text-anchor="start">4. 摩擦 K = 0.0007 /m、μ = 0.25（鍍鋅金屬套管）。</text>
+<text x="1060.00" y="892.00" class="note" text-anchor="start">5. 施預力時梁混凝土 f'ci ≥ 28 MPa。</text>
+<text x="1060.00" y="916.00" class="note" text-anchor="start">6. 損失（跨中）210 MPa；有效預力 Pe ≈ 6,282 kN。</text>
+<text x="1060.00" y="940.00" class="note" text-anchor="start">7. 張拉完成後 48 小時內以無收縮水泥漿全長灌漿。</text>
+<text x="1060.00" y="964.00" class="note" text-anchor="start">8. 預拱：張拉時跨中上拱約 35 mm。</text>
+<text x="1060.00" y="988.00" class="note" text-anchor="start">9. 張拉力與伸長量差異超過 ±7% 時應停工檢討。</text></svg></div></section><section class="sheet" id="sheet-s03" aria-label="S-03 配筋、支承與耐震配置" hidden><div class="scroller"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 1188" width="1680" height="1188" role="img" aria-label="S-03 配筋、支承與耐震配置"><style>
+.paper{fill:var(--paper)}
+.frame{stroke:var(--ink);stroke-width:2.4;fill:none}
+.fthin{stroke:var(--ink);stroke-width:1;fill:none}
+.obj{stroke:var(--ink);stroke-width:1.5;fill:var(--conc)}
+.cut{stroke:var(--ink);stroke-width:1.5;fill:var(--cut)}
+.cut2{stroke:var(--ink);stroke-width:1.1;fill:var(--cut2)}
+.thin{stroke:var(--ink);stroke-width:.8;fill:none}
+.hid{stroke:var(--ink2);stroke-width:1;stroke-dasharray:7 4;fill:none}
+.cl{stroke:var(--ink2);stroke-width:.8;stroke-dasharray:22 4 3 4;fill:none}
+.dim{stroke:var(--dim);stroke-width:.8;fill:none}
+.dimtick{stroke:var(--dim);stroke-width:1.4}
+.dimtxt{fill:var(--dim);font:13px 'IBM Plex Mono','DejaVu Sans Mono',ui-monospace,monospace}
+.leader{stroke:var(--ink2);stroke-width:.8;fill:none}
+.lbl{fill:var(--ink);font:14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lbl2{fill:var(--ink2);font:13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lbls{fill:var(--ink2);font:12px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.lblacc{fill:var(--acc);font:500 14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.vtitle{fill:var(--ink);font:600 18px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.vline{stroke:var(--ink);stroke-width:1.6}
+.vscale{fill:var(--ink2);font:13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tendon{stroke:var(--acc);stroke-width:1.8;fill:none}
+.tendon2{stroke:var(--acc);stroke-width:1.8;stroke-dasharray:10 4;fill:none}
+.duct{stroke:var(--acc);stroke-width:1.4;fill:var(--paper)}
+.ductc{fill:var(--acc)}
+.anchor{stroke:var(--acc);stroke-width:1.4;fill:var(--accbg)}
+.bar{stroke:var(--ink);stroke-width:1.3;fill:none}
+.barb{stroke:var(--acc);stroke-width:1.8;fill:none}
+.dot{fill:var(--ink)}
+.rubber{stroke:var(--ink);stroke-width:1;fill:var(--cut2)}
+.plate{stroke:var(--ink);stroke-width:.8;fill:var(--ink2)}
+.key{stroke:var(--ink);stroke-width:1.4;fill:var(--keybg)}
+.hatch{stroke:var(--ink2);stroke-width:.6}
+.brk{stroke:var(--ink);stroke-width:1;fill:none}
+.hdr{fill:var(--ink);font:600 15px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.note{fill:var(--ink);font:13.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.notes{fill:var(--ink2);font:12.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbk{fill:var(--ink2);font:12.5px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbv{fill:var(--ink);font:14px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.tbvb{fill:var(--ink);font:600 17px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+.stamp{fill:none;stroke:var(--stamp);stroke-width:2.4}
+.stamptxt{fill:var(--stamp);font:700 20px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif;letter-spacing:3px}
+.tbl{stroke:var(--ink2);stroke-width:.7;fill:none}
+.tbltxt{fill:var(--ink);font:13px 'IBM Plex Mono','DejaVu Sans Mono',ui-monospace,monospace}
+.tblhdr{fill:var(--ink);font:600 13px 'Noto Sans TC','Noto Sans CJK TC','PingFang TC','Microsoft JhengHei',sans-serif}
+</style><rect x="0.00" y="0.00" width="1680.00" height="1188.00" class="paper"/>
+<rect x="20.00" y="20.00" width="1640.00" height="1148.00" class="frame"/>
+<line x1="20.00" y1="1062.00" x2="1660.00" y2="1062.00" class="frame"/>
+<line x1="520.00" y1="1062.00" x2="520.00" y2="1168.00" class="fthin"/>
+<text x="32.00" y="1086.00" class="tbk" text-anchor="start">工程名稱</text>
+<text x="32.00" y="1120.00" class="tbv" text-anchor="start">40 m 簡支後拉預力 I 型梁橋（示範設計）</text>
+<line x1="1000.00" y1="1062.00" x2="1000.00" y2="1168.00" class="fthin"/>
+<text x="532.00" y="1086.00" class="tbk" text-anchor="start">圖名</text>
+<text x="532.00" y="1120.00" class="tbvb" text-anchor="start">配筋、支承與耐震配置</text>
+<line x1="1150.00" y1="1062.00" x2="1150.00" y2="1168.00" class="fthin"/>
+<text x="1012.00" y="1086.00" class="tbk" text-anchor="start">圖號</text>
+<text x="1012.00" y="1120.00" class="tbvb" text-anchor="start">S-03</text>
+<line x1="1330.00" y1="1062.00" x2="1330.00" y2="1168.00" class="fthin"/>
+<text x="1162.00" y="1086.00" class="tbk" text-anchor="start">比例</text>
+<text x="1162.00" y="1120.00" class="tbv" text-anchor="start">如圖示</text>
+<line x1="1660.00" y1="1062.00" x2="1660.00" y2="1168.00" class="fthin"/>
+<text x="1342.00" y="1086.00" class="tbk" text-anchor="start">依據</text>
+<text x="1342.00" y="1120.00" class="tbv" text-anchor="start">交通部公路橋梁設計規範、耐震設計規範</text>
+<text x="32.00" y="1154.00" class="tbk" text-anchor="start">所有尺寸以 mm 計，高程與座標自梁底、梁端起算；本圖由程式自計算結果產生。</text>
+<text x="1342.00" y="1154.00" class="tbk" text-anchor="start">2026-10-23　設計：AI 示範（未經技師簽證）</text>
+<rect x="1415.00" y="30.00" width="230.00" height="44.00" class="stamp"/>
+<text x="1530.00" y="60.00" class="stamptxt" text-anchor="middle">示範・非施工圖</text>
+<text x="390.00" y="52.00" class="vtitle" text-anchor="middle">梁端配筋（立面）</text>
+<line x1="290.00" y1="59.00" x2="490.00" y2="59.00" class="vline"/>
+<text x="390.00" y="78.00" class="vscale" text-anchor="middle">S = 1:30</text>
+<rect x="110.00" y="120.00" width="560.00" height="280.00" class="obj"/>
+<rect x="110.00" y="86.67" width="560.00" height="26.67" class="cut2"/>
+<polyline points="670.00,80.67 664.00,200.00 676.00,280.00 670.00,406.00" class="brk"/>
+<line x1="116.67" y1="394.67" x2="116.67" y2="94.67" class="bar"/>
+<line x1="156.67" y1="394.67" x2="156.67" y2="94.67" class="bar"/>
+<line x1="196.67" y1="394.67" x2="196.67" y2="94.67" class="bar"/>
+<line x1="236.67" y1="394.67" x2="236.67" y2="94.67" class="bar"/>
+<line x1="276.67" y1="394.67" x2="276.67" y2="94.67" class="bar"/>
+<line x1="316.67" y1="394.67" x2="316.67" y2="94.67" class="bar"/>
+<line x1="356.67" y1="394.67" x2="356.67" y2="94.67" class="bar"/>
+<line x1="396.67" y1="394.67" x2="396.67" y2="94.67" class="bar"/>
+<line x1="436.67" y1="394.67" x2="436.67" y2="94.67" class="bar"/>
+<line x1="476.67" y1="394.67" x2="476.67" y2="94.67" class="bar"/>
+<line x1="516.67" y1="394.67" x2="516.67" y2="94.67" class="bar"/>
+<line x1="556.67" y1="394.67" x2="556.67" y2="94.67" class="bar"/>
+<line x1="596.67" y1="394.67" x2="596.67" y2="94.67" class="bar"/>
+<line x1="636.67" y1="394.67" x2="636.67" y2="94.67" class="bar"/>
+<line x1="130.00" y1="394.67" x2="130.00" y2="125.33" class="barb"/>
+<line x1="163.33" y1="394.67" x2="163.33" y2="125.33" class="barb"/>
+<line x1="196.67" y1="394.67" x2="196.67" y2="125.33" class="barb"/>
+<line x1="230.00" y1="394.67" x2="230.00" y2="125.33" class="barb"/>
+<line x1="263.33" y1="394.67" x2="263.33" y2="125.33" class="barb"/>
+<line x1="296.67" y1="394.67" x2="296.67" y2="125.33" class="barb"/>
+<line x1="330.00" y1="394.67" x2="330.00" y2="125.33" class="barb"/>
+<line x1="363.33" y1="394.67" x2="363.33" y2="125.33" class="barb"/>
+<line x1="396.67" y1="394.67" x2="396.67" y2="125.33" class="barb"/>
+<line x1="116.67" y1="394.67" x2="116.67" y2="125.33" class="barb"/>
+<line x1="126.00" y1="394.67" x2="126.00" y2="125.33" class="barb"/>
+<polyline points="110.00,180.00 123.33,181.80 136.67,183.59 150.00,185.37 163.33,187.14 176.67,188.91 190.00,190.66 203.33,192.41 216.67,194.15 230.00,195.88 243.33,197.60 256.67,199.31 270.00,201.01 283.33,202.70 296.67,204.39 310.00,206.06 323.33,207.73 336.67,209.39 350.00,211.04 363.33,212.68 376.67,214.31 390.00,215.93 403.33,217.55 416.67,219.15 430.00,220.75 443.33,222.33 456.67,223.91 470.00,225.48 483.33,227.04 496.67,228.60 510.00,230.14 523.33,231.67 536.67,233.20 550.00,234.71 563.33,236.22 576.67,237.72 590.00,239.21 603.33,240.69 616.67,242.16 630.00,243.63 643.33,245.08 656.67,246.53 670.00,247.97" class="tendon2"/>
+<rect x="105.00" y="162.00" width="5.00" height="36.00" class="anchor"/>
+<text x="101.00" y="185.00" class="lblacc" text-anchor="end">T1</text>
+<polyline points="110.00,233.33 123.33,234.61 136.67,235.88 150.00,237.15 163.33,238.41 176.67,239.66 190.00,240.91 203.33,242.15 216.67,243.38 230.00,244.61 243.33,245.83 256.67,247.04 270.00,248.25 283.33,249.46 296.67,250.65 310.00,251.84 323.33,253.03 336.67,254.20 350.00,255.37 363.33,256.54 376.67,257.70 390.00,258.85 403.33,260.00 416.67,261.14 430.00,262.27 443.33,263.40 456.67,264.52 470.00,265.63 483.33,266.74 496.67,267.84 510.00,268.94 523.33,270.03 536.67,271.11 550.00,272.19 563.33,273.26 576.67,274.32 590.00,275.38 603.33,276.43 616.67,277.48 630.00,278.52 643.33,279.55 656.67,280.58 670.00,281.60" class="tendon2"/>
+<rect x="105.00" y="215.33" width="5.00" height="36.00" class="anchor"/>
+<text x="101.00" y="238.33" class="lblacc" text-anchor="end">T2</text>
+<polyline points="110.00,286.67 123.33,287.61 136.67,288.54 150.00,289.47 163.33,290.39 176.67,291.31 190.00,292.23 203.33,293.14 216.67,294.05 230.00,294.95 243.33,295.85 256.67,296.74 270.00,297.63 283.33,298.51 296.67,299.39 310.00,300.27 323.33,301.13 336.67,302.00 350.00,302.86 363.33,303.72 376.67,304.57 390.00,305.41 403.33,306.26 416.67,307.09 430.00,307.93 443.33,308.75 456.67,309.58 470.00,310.40 483.33,311.21 496.67,312.02 510.00,312.83 523.33,313.63 536.67,314.42 550.00,315.21 563.33,316.00 576.67,316.78 590.00,317.56 603.33,318.33 616.67,319.10 630.00,319.86 643.33,320.62 656.67,321.38 670.00,322.13" class="tendon2"/>
+<rect x="105.00" y="268.67" width="5.00" height="36.00" class="anchor"/>
+<text x="101.00" y="291.67" class="lblacc" text-anchor="end">T3</text>
+<polyline points="110.00,340.00 123.33,340.42 136.67,340.83 150.00,341.25 163.33,341.66 176.67,342.07 190.00,342.47 203.33,342.88 216.67,343.28 230.00,343.68 243.33,344.08 256.67,344.48 270.00,344.87 283.33,345.26 296.67,345.66 310.00,346.04 323.33,346.43 336.67,346.81 350.00,347.20 363.33,347.58 376.67,347.96 390.00,348.33 403.33,348.71 416.67,349.08 430.00,349.45 443.33,349.82 456.67,350.18 470.00,350.55 483.33,350.91 496.67,351.27 510.00,351.63 523.33,351.98 536.67,352.34 550.00,352.69 563.33,353.04 576.67,353.38 590.00,353.73 603.33,354.07 616.67,354.41 630.00,354.75 643.33,355.09 656.67,355.43 670.00,355.76" class="tendon2"/>
+<rect x="105.00" y="322.00" width="5.00" height="36.00" class="anchor"/>
+<text x="101.00" y="345.00" class="lblacc" text-anchor="end">T4</text>
+<rect x="140.00" y="400.00" width="46.67" height="12.00" class="obj"/>
+<line x1="130.00" y1="436.00" x2="396.67" y2="436.00" class="dim"/>
+<line x1="126.00" y1="440.00" x2="134.00" y2="432.00" class="dimtick"/>
+<line x1="392.67" y1="440.00" x2="400.67" y2="432.00" class="dimtick"/>
+<text x="402.67" y="440.00" class="dimtxt" text-anchor="start">爆裂筋 9 組 @250</text>
+<line x1="110.00" y1="462.00" x2="432.75" y2="462.00" class="dim"/>
+<line x1="106.00" y1="466.00" x2="114.00" y2="458.00" class="dimtick"/>
+<line x1="428.75" y1="466.00" x2="436.75" y2="458.00" class="dimtick"/>
+<text x="438.75" y="466.00" class="dimtxt" text-anchor="start">錨碇一般區 2,421</text>
+<text x="70.00" y="490.00" class="notes" text-anchor="start">黑線：D13 @300 雙肢箍筋全長，伸入橋面版兼作水平剪力繫筋</text>
+<text x="70.00" y="511.00" class="notes" text-anchor="start">藍線：爆裂筋 D16 閉合箍 9 組 @250（梁端 2.4 m 內）、剝裂筋 2-D16（梁端 150 內）</text>
+<text x="70.00" y="532.00" class="notes" text-anchor="start">每個錨碇另加水平繫筋 5-D13 U 形（錨碇後 350 mm 內）；錨碇局部區螺旋筋依廠商</text>
+<text x="1180.00" y="52.00" class="vtitle" text-anchor="middle">橋面版配筋</text>
+<line x1="1095.00" y1="59.00" x2="1265.00" y2="59.00" class="vline"/>
+<text x="1180.00" y="78.00" class="vscale" text-anchor="middle">S = 1:25</text>
+<rect x="760.00" y="268.00" width="720.00" height="32.00" class="cut"/>
+<polygon points="760.00,268.00 840.00,268.00 840.00,256.00 816.00,215.20 792.00,132.00 760.00,132.00" class="cut"/>
+<polygon points="824.00,308.00 984.00,308.00 984.00,332.00 924.00,348.00 924.00,412.00 884.00,412.00 884.00,348.00 824.00,332.00" class="obj"/>
+<rect x="824.00" y="300.00" width="160.00" height="8.00" class="cut2"/>
+<polygon points="1208.00,308.00 1368.00,308.00 1368.00,332.00 1308.00,348.00 1308.00,412.00 1268.00,412.00 1268.00,348.00 1208.00,332.00" class="obj"/>
+<rect x="1208.00" y="300.00" width="160.00" height="8.00" class="cut2"/>
+<line x1="769.60" y1="276.00" x2="1480.00" y2="276.00" class="bar"/>
+<line x1="769.60" y1="294.40" x2="1480.00" y2="294.40" class="bar"/>
+<circle cx="776.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="824.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="872.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="920.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="968.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1016.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1064.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1112.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1160.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1208.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1256.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1304.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1352.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1400.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="1448.00" cy="278.24" r="2.20" class="dot"/>
+<circle cx="776.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="808.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="840.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="872.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="904.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="936.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="968.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1000.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1032.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1064.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1096.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1128.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1160.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1192.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1224.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1256.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1288.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1320.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1352.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1384.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1416.00" cy="292.16" r="2.20" class="dot"/>
+<circle cx="1448.00" cy="292.16" r="2.20" class="dot"/>
+<line x1="1480.00" y1="188.00" x2="1480.00" y2="428.00" class="cl"/>
+<text x="1480.00" y="178.40" class="lbl2" text-anchor="middle">CL</text>
+<polyline points="1064.00,276.00 1080.00,196.00 1089.60,196.00" class="leader"/>
+<text x="1093.60" y="192.00" class="lbl" text-anchor="start">頂層橫向 D16@175（全寬）</text>
+<polyline points="1016.00,278.24 1024.00,228.00 1033.60,228.00" class="leader"/>
+<text x="1037.60" y="224.00" class="lbls" text-anchor="start">頂層縱向 D13@300</text>
+<polyline points="1000.00,294.40 1009.60,348.00 1016.00,348.00" class="leader"/>
+<text x="1020.00" y="344.00" class="lbl" text-anchor="start">底層橫向 D13@150</text>
+<polyline points="1032.00,292.16 1041.60,383.20 1048.00,383.20" class="leader"/>
+<text x="1052.00" y="379.20" class="lbls" text-anchor="start">底層縱向 D13@200</text>
+<line x1="1506.00" y1="300.00" x2="1506.00" y2="268.00" class="dim"/>
+<line x1="1502.00" y1="304.00" x2="1510.00" y2="296.00" class="dimtick"/>
+<line x1="1502.00" y1="272.00" x2="1510.00" y2="264.00" class="dimtick"/>
+<text x="1512.00" y="288.50" class="dimtxt" text-anchor="start">200</text>
+<text x="760.00" y="436.00" class="lbls" text-anchor="start">保護層：頂 50、底 35 mm；有效跨徑 S = 1.90 m（頂翼寬/厚 ≥ 4：翼緣淨距加半翼寬）</text>
+<text x="270.00" y="585.00" class="vtitle" text-anchor="middle">支承墊詳圖</text>
+<line x1="180.00" y1="592.00" x2="360.00" y2="592.00" class="vline"/>
+<text x="270.00" y="611.00" class="vscale" text-anchor="middle">平面 S = 1:10、斷面 S = 1:5</text>
+<rect x="110.00" y="650.00" width="140.00" height="200.00" class="rubber"/>
+<line x1="110.00" y1="874.00" x2="250.00" y2="874.00" class="dim"/>
+<line x1="106.00" y1="878.00" x2="114.00" y2="870.00" class="dimtick"/>
+<line x1="246.00" y1="878.00" x2="254.00" y2="870.00" class="dimtick"/>
+<text x="180.00" y="869.00" class="dimtxt" text-anchor="middle">350（順橋向）</text>
+<line x1="92.00" y1="850.00" x2="92.00" y2="650.00" class="dim"/>
+<line x1="88.00" y1="854.00" x2="96.00" y2="846.00" class="dimtick"/>
+<line x1="88.00" y1="654.00" x2="96.00" y2="646.00" class="dimtick"/>
+<text x="86.00" y="754.50" class="dimtxt" text-anchor="end">500</text>
+<rect x="300.00" y="755.20" width="280.00" height="4.80" class="rubber"/>
+<rect x="304.80" y="752.80" width="270.40" height="2.40" class="plate"/>
+<rect x="300.00" y="743.20" width="280.00" height="9.60" class="rubber"/>
+<rect x="304.80" y="740.80" width="270.40" height="2.40" class="plate"/>
+<rect x="300.00" y="731.20" width="280.00" height="9.60" class="rubber"/>
+<rect x="304.80" y="728.80" width="270.40" height="2.40" class="plate"/>
+<rect x="300.00" y="719.20" width="280.00" height="9.60" class="rubber"/>
+<rect x="304.80" y="716.80" width="270.40" height="2.40" class="plate"/>
+<rect x="300.00" y="707.20" width="280.00" height="9.60" class="rubber"/>
+<rect x="304.80" y="704.80" width="270.40" height="2.40" class="plate"/>
+<rect x="300.00" y="695.20" width="280.00" height="9.60" class="rubber"/>
+<rect x="304.80" y="692.80" width="270.40" height="2.40" class="plate"/>
+<rect x="300.00" y="688.00" width="280.00" height="4.80" class="rubber"/>
+<line x1="600.00" y1="760.00" x2="600.00" y2="688.00" class="dim"/>
+<line x1="596.00" y1="764.00" x2="604.00" y2="756.00" class="dimtick"/>
+<line x1="596.00" y1="692.00" x2="604.00" y2="684.00" class="dimtick"/>
+<text x="606.00" y="728.50" class="dimtxt" text-anchor="start">90</text>
+<text x="300.00" y="674.00" class="lbls" text-anchor="start">橡膠 5×12 + 2×6、鋼板 6×3</text>
+<text x="300.00" y="810.00" class="notes" text-anchor="start">G = 0.86 MPa（硬度約 55）；形狀係數 S = 8.58</text>
+<text x="300.00" y="832.00" class="notes" text-anchor="start">σ = 6.51 ≤ 6.86 MPa（10.6.6 方法 B）</text>
+<text x="300.00" y="854.00" class="notes" text-anchor="start">Δs = 24.6 mm；hrt = 72 ≥ 2Δs</text>
+<text x="300.00" y="876.00" class="notes" text-anchor="start">θ = 8.6 mrad，檢核不上揚</text>
+<text x="300.00" y="898.00" class="notes" text-anchor="start">抗拉拔裝置極限拉力 ≥ 128 kN（每個支承）</text>
+<text x="1150.00" y="492.00" class="vtitle" text-anchor="middle">橋台座平面（止震塊與防落長度）</text>
+<line x1="985.00" y1="499.00" x2="1315.00" y2="499.00" class="vline"/>
+<text x="1150.00" y="518.00" class="vscale" text-anchor="middle">S = 1:50</text>
+<rect x="774.00" y="608.00" width="752.00" height="64.00" class="obj"/>
+<rect x="774.00" y="675.60" width="752.00" height="32.00" class="cut"/>
+<text x="1150.00" y="696.60" class="lbls" text-anchor="middle">背牆</text>
+<rect x="834.00" y="552.00" width="56.00" height="120.00" class="hid"/>
+<rect x="842.00" y="626.00" width="40.00" height="28.00" class="rubber"/>
+<rect x="1026.00" y="552.00" width="56.00" height="120.00" class="hid"/>
+<rect x="1034.00" y="626.00" width="40.00" height="28.00" class="rubber"/>
+<rect x="1218.00" y="552.00" width="56.00" height="120.00" class="hid"/>
+<rect x="1226.00" y="626.00" width="40.00" height="28.00" class="rubber"/>
+<rect x="1410.00" y="552.00" width="56.00" height="120.00" class="hid"/>
+<rect x="1418.00" y="626.00" width="40.00" height="28.00" class="rubber"/>
+<rect x="892.40" y="616.00" width="131.20" height="48.00" class="key"/>
+<text x="958.00" y="645.00" class="lbls" text-anchor="middle">止震塊</text>
+<rect x="1084.40" y="616.00" width="131.20" height="48.00" class="key"/>
+<text x="1150.00" y="645.00" class="lbls" text-anchor="middle">止震塊</text>
+<rect x="1276.40" y="616.00" width="131.20" height="48.00" class="key"/>
+<text x="1342.00" y="645.00" class="lbls" text-anchor="middle">止震塊</text>
+<line x1="1550.00" y1="672.00" x2="1550.00" y2="608.00" class="dim"/>
+<line x1="1546.00" y1="676.00" x2="1554.00" y2="668.00" class="dimtick"/>
+<line x1="1546.00" y1="612.00" x2="1554.00" y2="604.00" class="dimtick"/>
+<text x="1556.00" y="644.50" class="dimtxt" text-anchor="start">LN 800</text>
+<line x1="1550.00" y1="675.60" x2="1550.00" y2="672.00" class="dim"/>
+<line x1="1546.00" y1="679.60" x2="1554.00" y2="671.60" class="dimtick"/>
+<line x1="1546.00" y1="676.00" x2="1554.00" y2="668.00" class="dimtick"/>
+<text x="1556.00" y="678.30" class="dimtxt" text-anchor="start">45</text>
+<polyline points="862.00,568.00 764.00,568.00" class="leader"/>
+<text x="760.00" y="564.00" class="lbls" text-anchor="end">梁（底翼 700）</text>
+<polyline points="1083.20,632.00 1110.00,729.60 1114.80,729.60" class="leader"/>
+<text x="1118.80" y="725.60" class="lbls" text-anchor="start">止震塊與梁間隙 30（設緩衝材）</text>
+<text x="774.00" y="751.60" class="lbls" text-anchor="start">支承中心距梁端 400；座緣距梁端 LN；背牆與梁端間隙同時作為縱向緩衝</text>
+<text x="700.00" y="805.00" class="hdr" text-anchor="start">耐震與支承配置說明</text>
+<text x="700.00" y="831.00" class="note" text-anchor="start">1. 橋址 台中市南屯區，近斷層（車籠埔、彰化等）；用途係數 1.0。</text>
+<text x="700.00" y="853.00" class="note" text-anchor="start">2. 等級 II：SII,S = 0.92、SII,1 = 0.743；等級 III：1.13、0.962。</text>
+<text x="700.00" y="875.00" class="note" text-anchor="start">3. 只靠支承墊：週期 1.28 s、等級 II 位移 236 mm，不可行。</text>
+<text x="700.00" y="897.00" class="note" text-anchor="start">4. 梁間止震塊每座橋台 3 塊，兩向共用；橫向設計力 3,133 kN，</text>
+<text x="700.00" y="919.00" class="note" text-anchor="start">   每塊剪力摩擦筋 ≥ 2,925 mm²、剪力面積 ≥ 0.22 m²。</text>
+<text x="700.00" y="941.00" class="note" text-anchor="start">5. 縱向設計力 6,266 kN，由背牆承受（保守按單一橋台）。</text>
+<text x="700.00" y="963.00" class="note" text-anchor="start">6. 垂直地震係數 0.372；拉拔 Q/Rd = 0.94，需設抗拉拔裝置。</text>
+<text x="700.00" y="985.00" class="note" text-anchor="start">7. 防落長度 LN = 800 mm（規範最小 600；uR + uG = 214）。</text>
+<text x="700.00" y="1007.00" class="note" text-anchor="start">8. 梁端間隙 ≥ 45 mm；伸縮縫伸縮量 ≥ 45 mm 並滿足常時需求。</text>
+<text x="700.00" y="1029.00" class="note" text-anchor="start">9. 橋台、基礎、液化檢核需地質資料，另案設計。</text></svg></div></section>
+  <footer>圖面尺寸以 mm 計。橋台、基礎與液化檢核需要鑽探資料，未包含在本圖。實際設計須由執業技師負責並簽證。</footer>
+</div>
+<script>
+(function () {
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const sheets = Array.from(document.querySelectorAll('.sheet'));
+  let zoom = '1';
+  function show(id) {
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.sheet === id)));
+    sheets.forEach(s => { s.hidden = s.id !== 'sheet-' + id; s.dataset.zoom = zoom; });
+  }
+  tabs.forEach(t => t.addEventListener('click', () => {
+    show(t.dataset.sheet);
+    try { history.replaceState(null, '', '#' + t.dataset.sheet); } catch (e) {}
+  }));
+  document.querySelectorAll('.zoom button').forEach(b => b.addEventListener('click', () => {
+    zoom = b.dataset.z;
+    document.querySelectorAll('.zoom button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    sheets.forEach(s => s.dataset.zoom = zoom);
+  }));
+  const h = (location.hash || '').slice(1);
+  show(tabs.some(t => t.dataset.sheet === h) ? h : tabs[0].dataset.sheet);
+})();
+</script>
+</body>
+</html>

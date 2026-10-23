@@ -1,0 +1,4 @@
+numpy
+openseespy
+cairosvg
+pypdf
