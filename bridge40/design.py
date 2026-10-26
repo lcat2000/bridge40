@@ -235,10 +235,12 @@ def girder_design(props, d, an, dist):
         f_fs = np.array([tt["fs"] for tt in tend])
         f_fr = np.array([tt["f"] for tt in tend])
         # 跨中的損失（8.16.2）
+        # 施預力時（灌漿前）用扣除套管的淨斷面（〔設〕8.17.1）；fcds 發生在灌漿後，用毛斷面
         sec = S.section_at(LG / 2 * 1000, props)
-        A_, I_, yb_ = sec["A"], sec["I"], sec["yb"]
-        Pm = Aps_t * f_fs[:, imid_t]
         ym = y_t[:, imid_t]
+        secn = S.net_section(sec, list(ym))
+        A_, I_, yb_ = secn["A"], secn["I"], secn["yb"]
+        Pm = Aps_t * f_fs[:, imid_t]
         e_m = yb_ - np.sum(Pm * ym) / np.sum(Pm)
         ES = 0.0
         for _ in range(30):
@@ -246,7 +248,8 @@ def girder_design(props, d, an, dist):
             fcir = Pi.sum() / A_ + Pi.sum() * e_m ** 2 / I_ - Mg1[imid_t] * 1e6 * e_m / I_
             ES = 0.5 * Ep / Eci * fcir
         y_cg = yb_ - e_m
-        fcds = ((dl["Mnc"][imid_b] - dl["Mg"][imid_b]) * 1e6 * e_m / I_
+        e_g = sec["yb"] - y_cg
+        fcds = ((dl["Mnc"][imid_b] - dl["Mg"][imid_b]) * 1e6 * e_g / sec["I"]
                 + dl["Mc"][imid_b] * 1e6 * (ybc - y_cg) / Ic)
         CRc = max(12 * fcir - 7 * fcds, 0.0)
         FR = max(0.0, 0.70 * P.FPU - f_fr[:, imid_t].mean())
@@ -259,14 +262,17 @@ def girder_design(props, d, an, dist):
         for k in range(0, len(xs_t), 10):
             xg = xs_t[k]
             sec = S.section_at(xg * 1000, props)
+            secn = S.net_section(sec, list(y_t[:, k]))
             e_t = sec["yb"] - y_t[:, k]
-            Pi, Mpi = Pi_t[:, k].sum(), np.sum(Pi_t[:, k] * e_t)
+            e_n = secn["yb"] - y_t[:, k]
+            Pi, Mpi = Pi_t[:, k].sum(), np.sum(Pi_t[:, k] * e_n)
             Pe, Mpe = Pe_t[:, k].sum(), np.sum(Pe_t[:, k] * e_t)
             mg1 = Mg1[k] * 1e6
-            ft_i = -Pi / sec["A"] + Mpi / sec["St"] - mg1 / sec["St"]
-            fb_i = -Pi / sec["A"] - Mpi / sec["Sb"] + mg1 / sec["Sb"]
+            # 施預力時：淨斷面；最終（已灌漿）：毛斷面
+            ft_i = -Pi / secn["A"] + Mpi / secn["St"] - mg1 / secn["St"]
+            fb_i = -Pi / secn["A"] - Mpi / secn["Sb"] + mg1 / secn["Sb"]
             row = dict(xg=xg, ft_i=ft_i, fb_i=fb_i, Pi=Pi, Pe=Pe, Mpe=Mpe, Mpi=Mpi,
-                       ycg=float(np.sum(Pe_t[:, k] * y_t[:, k]) / Pe), sec=sec)
+                       ycg=float(np.sum(Pe_t[:, k] * y_t[:, k]) / Pe), sec=sec, sec_n=secn)
             xb = xg - XE
             if 0 <= xb <= L:
                 mnc = np.interp(xb, xs_b, dl["Mnc"]) * 1e6
@@ -347,7 +353,7 @@ def girder_design(props, d, an, dist):
     worst_t = max(rows, key=lambda r: r["ft_i"])
     top_bars = None
     if worst_t["ft_i"] > lim["t_rel_nb"]:
-        sec_w = worst_t["sec"]
+        sec_w = worst_t["sec_n"]
         poly = P.END_BLOCK if sec_w["bw"] > P.WEB_T + 1 else P.GIRDER
         ft_, fb_ = worst_t["ft_i"], worst_t["fb_i"]
         c_t = ft_ / (ft_ - fb_) * P.GIRDER_H
@@ -403,13 +409,17 @@ def camber_calc(props, d, dl, xs_t, Pi_t, Pe_t, y_t):
     Eci = props["Eci"]
     Ec = props["Ec_girder"]
     secs = [S.section_at(x * 1000, props) for x in xs_t]
+    secs_n = [S.net_section(s, list(y_t[:, i])) for i, s in enumerate(secs)]
     I_x = np.array([s["I"] for s in secs])
+    I_n = np.array([s["I"] for s in secs_n])
     e_x = np.array([s["yb"] for s in secs])[None, :] - y_t
+    e_xn = np.array([s["yb"] for s in secs_n])[None, :] - y_t
+    Mpi_n = np.sum(Pi_t * e_xn, axis=0) / 1e6                   # 施預力時（淨斷面）
     Mpi = np.sum(Pi_t * e_x, axis=0) / 1e6                      # kN·m（向上）
     Mpe = np.sum(Pe_t * e_x, axis=0) / 1e6
     Mg1 = stage1_girder_moment(d, xs_t)
     full = (0, n - 1)
-    k1 = (Mg1 - Mpi) * 1e6 / (Eci * I_x) * 1000                 # 1/m
+    k1 = (Mg1 - Mpi_n) * 1e6 / (Eci * I_n) * 1000               # 1/m，灌漿前用淨斷面
     d1 = deflect(k1, full)
     i0 = int(round(XE / dx))
     i1 = n - 1 - i0

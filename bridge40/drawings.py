@@ -199,7 +199,7 @@ class Sheet:
             self.text(x1 + 12, y0 + 58, v, "tbvb" if k in ("圖號", "圖名") else "tbv")
         self.text(32, y0 + 92, "所有尺寸以 mm 計，高程與座標自梁底、梁端起算；本圖由程式自計算結果產生。",
                   "tbk")
-        self.text(1342, y0 + 92, "2026-10-23　設計：AI 示範（未經技師簽證）", "tbk")
+        self.text(1342, y0 + 92, f"{P.DRAWING_DATE} 修訂 {P.REVISION}　設計：AI 示範（未經技師簽證）", "tbk")
         sx, sy = 1415, 30
         self.rect(sx, sy, 230, 44, "stamp")
         self.text(sx + 115, sy + 30, "示範・非施工圖", "stamptxt", "middle")

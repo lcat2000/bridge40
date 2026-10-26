@@ -206,6 +206,18 @@ t.row("Sbc", "Ic / ybc", f"{f(Ic, 0)}/{f(ybc, 1)}", f"**{f(Sbc, 0)} mm³**")
 t.flush()
 cmp("合成斷面 Ic", Ic, R["props"]["comp"]["I"], "mm⁴", 0)
 
+# 淨斷面（扣除套管開孔；後拉構材灌漿前用，〔設〕8.17.1）
+Ah = math.pi * (P.DUCT_OD / 2) ** 2
+Ih = math.pi * P.DUCT_OD ** 4 / 64
+
+
+def net_section(ys):
+    An = A - len(ys) * Ah
+    ybn = (A * yb - Ah * sum(ys)) / An
+    In = I + A * (yb - ybn) ** 2 - sum(Ah * (y - ybn) ** 2 + Ih for y in ys)
+    return An, ybn, In
+
+
 # ---------------------------------------------------------------------------
 # 3. 呆載重與彎矩
 # ---------------------------------------------------------------------------
@@ -410,16 +422,25 @@ cmp("四束跨中摩擦後平均應力", sum(f_mid) / 4, sum(pt["mid_after_set"]
 # 6. 預力損失
 # ---------------------------------------------------------------------------
 h2("6. 預力損失（〔設〕8.16.2）")
+para("fcir 是施預力後、灌漿前的應力，依〔設〕8.17.1 用扣除套管開孔的淨斷面；"
+     "fcds 由灌漿後才施加的載重產生，用毛斷面與合成斷面。")
 y_mid = [td["y_mid"] for td in P.TENDONS]
 F0 = sum(Aps_t * v for v in f_mid)
 ycg = sum(Aps_t * v * y for v, y in zip(f_mid, y_mid)) / F0
-e_m = yb - ycg
+e_m = yb - ycg                                   # 毛斷面偏心（灌漿後）
+An_m, ybn_m, In_m = net_section(y_mid)
+e_n = ybn_m - ycg                                # 淨斷面偏心（灌漿前）
 SH = 0.8 * (117.2 - 1.034 * P.RH)
 r_m = P.EP / Eci
-k_s = 1 / A + e_m ** 2 / I
-mg_term = Mg1 * 1e6 * e_m / I
-# fcir = (F0 − Aps·ES)·k − Mg1·e/I，ES = 0.5·r·fcir → 線性方程直接解
-ES = 0.5 * r_m * (F0 * k_s - mg_term) / (1 + 0.5 * r_m * Aps * k_s)
+
+
+def solve_ES(r, An, In, e):
+    """fcir = (F0 − Aps·ES)·k − Mg1·e/I，ES = 0.5·r·fcir → 線性方程直接解。"""
+    k = 1 / An + e ** 2 / In
+    return 0.5 * r * (F0 * k - Mg1 * 1e6 * e / In) / (1 + 0.5 * r * Aps * k), k
+
+
+ES, k_s = solve_ES(r_m, An_m, In_m, e_n)
 fcir = ES / (0.5 * r_m)
 Pi = F0 - Aps * ES
 fcds = Mdk * 1e6 * e_m / I + Mc * 1e6 * (ybc - ycg) / Ic
@@ -429,16 +450,19 @@ CRs = 34.5 - 0.07 * FR - 0.1 * ES - 0.05 * (SH + CRc)
 loss = SH + ES + CRc + CRs
 t = Table()
 t.row("鋼腱重心（跨中）", "ycg = Σ(F·y)/ΣF", f"四束 y = 270、270、130、130，依各束力加權", f"{f(ycg, 2)} mm")
-t.row("偏心 e", "yb − ycg", f"{f(yb, 1)} − {f(ycg, 2)}", f"{f(e_m, 1)} mm")
+t.row("淨斷面（灌漿前）", "扣除 4 支外徑 92 mm 套管，各 Ah = π·46²〔設〕8.17.1",
+      f"A = 810,000 − 4 × {f(Ah, 1)}", f"A = {f(An_m, 0)} mm²，yb = {f(ybn_m, 1)} mm，I = {In_m:.4e} mm⁴")
+t.row("偏心 e", "淨斷面 ybn − ycg（施預力時）；毛斷面 yb − ycg（灌漿後）",
+      f"{f(ybn_m, 1)} − {f(ycg, 2)}；{f(yb, 1)} − {f(ycg, 2)}", f"{f(e_n, 1)} mm；{f(e_m, 1)} mm")
 t.row("乾縮 SH", "0.8(117.2 − 1.034 RH)〔設〕(8-5)", f"0.8 × (117.2 − 1.034 × 80)", f"**{f(SH, 2)} MPa**")
-t.row("fcir 的表示式", "fcir = Pi/A + Pi·e²/I − Mg1·e/I，Pi = F0 − Aps·ES〔設〕8.16.2(2)",
+t.row("fcir 的表示式", "fcir = Pi/A + Pi·e²/I − Mg1·e/I（淨斷面），Pi = F0 − Aps·ES〔設〕8.16.2(2)",
       f"F0 = {f(F0 / 1e3, 1)} kN，Mg1 = {f(Mg1, 1)} kN·m", "—")
 t.row("彈性縮短 ES", "0.5 (Ep/Eci) fcir〔設〕(8-7)；與上式聯立，ES = 0.5r(F0·k − Mg1e/I)/(1 + 0.5r·Aps·k)，"
-      "r = Ep/Eci，k = 1/A + e²/I",
+      f"r = Ep/Eci（Eci 以 f'ci = {f(fci, 0)} MPa 計），k = 1/A + e²/I",
       f"r = {f(r_m, 4)}，k = {k_s:.4e} 1/mm²", f"**{f(ES, 2)} MPa**")
 t.row("fcir", "ES/(0.5 r)", f"{f(ES, 2)}/(0.5 × {f(r_m, 4)})", f"{f(fcir, 2)} MPa")
 t.row("Pi（施預力後）", "F0 − Aps·ES", f"{f(F0 / 1e3, 1)} − {f(Aps, 0)} × {f(ES, 2)}/1,000", f"{f(Pi / 1e3, 1)} kN")
-t.row("fcds", "M版·e/I + Mc·(ybc − ycg)/Ic〔設〕(8-9) 式中定義",
+t.row("fcds", "M版·e/I + Mc·(ybc − ycg)/Ic（毛斷面、合成斷面）〔設〕(8-9) 式中定義",
       f"{f(Mdk, 1)}e6 × {f(e_m, 1)}/I + {f(Mc, 1)}e6 × {f(ybc - ycg, 1)}/Ic", f"{f(fcds, 2)} MPa")
 t.row("潛變 CRc", "12 fcir − 7 fcds〔設〕(8-9)", f"12 × {f(fcir, 2)} − 7 × {f(fcds, 2)}", f"**{f(CRc, 2)} MPa**")
 t.row("FR", "跨中摩擦後應力低於 0.70 f's 的差值〔設〕8.16.2(4)",
@@ -461,7 +485,8 @@ cmp("跨中有效預力 Pe", Pe / 1e3, pt["Pe_mid"], "kN", 1)
 # ---------------------------------------------------------------------------
 # 7. 跨中梁底使用應力
 # ---------------------------------------------------------------------------
-h2("7. 跨中梁底使用應力（〔設〕8.15.2 2.）")
+h2("7. 跨中梁底應力（〔設〕8.15.2）")
+h3("使用載重（灌漿後，毛斷面與合成斷面）")
 e_e = yb - ycg_e
 terms = [-Pe / A, -Pe * e_e / Sb, Mnc * 1e6 / Sb, (Mc + M_LL) * 1e6 / Sbc]
 fb = sum(terms)
@@ -478,91 +503,65 @@ t.row("容許拉應力", "0.498√f'c（配置握裹鋼筋，一般橋梁）〔�
 t.flush()
 cmp("跨中梁底使用應力", fb, R["stress"]["fin_bot_max"], "MPa", 3, "程式值為全梁最大")
 
-# 施預力時（附帶：淨斷面）
-Ah = math.pi * (P.DUCT_OD / 2) ** 2
-Ih = math.pi * P.DUCT_OD ** 4 / 64
 
-
-def net_section(ys):
-    An = A - len(ys) * Ah
-    ybn = (A * yb - Ah * sum(ys)) / An
-    In = I + A * (yb - ybn) ** 2 - sum(Ah * (y - ybn) ** 2 + Ih for y in ys)
-    return An, ybn, In
-
-
-def transfer_bottom(xg, net, es=None, dy=0.0):
-    """施預力時梁底應力。net：扣除套管開孔；es：彈性縮短損失；dy：鋼絞線重心相對套管中心上移量。"""
-    es = ES if es is None else es
+def transfer_terms(xg, net, es, dy=0.0):
+    """施預力時梁底應力各項。net：扣除套管；es：彈性縮短；dy：鋼絞線重心相對套管中心上移量。"""
     ys_d = [td["y_mid"] + (td["y_end"] - td["y_mid"]) * (1 - xg / HALF) ** 2 for td in P.TENDONS]
     ys = [y + dy for y in ys_d]
     Fi = [Aps_t * (m["fs"](xg if e == "L" else LG - xg) - es) for m, e in zip(TM, P.JACK_END)]
     Pi_ = sum(Fi)
     yc = sum(F * y for F, y in zip(Fi, ys)) / Pi_
-    if net:
-        Aa, yy, II = net_section(ys_d)
-    else:
-        Aa, yy, II = A, yb, I
-    mg = (w_g * xg * (LG - xg) / 2 + M_extra(xg, LG, 0.0, n=400)) * 1e6
-    return -Pi_ / Aa - Pi_ * (yy - yc) * yy / II + mg * yy / II
+    Aa, yy, II = net_section(ys_d) if net else (A, yb, I)
+    mg = w_g * xg * (LG - xg) / 2 + M_extra(xg, LG, 0.0, n=400)
+    t1, t2, t3 = -Pi_ / Aa, -Pi_ * (yy - yc) / (II / yy), mg * 1e6 / (II / yy)
+    return dict(Pi=Pi_, yc=yc, A=Aa, yb=yy, I=II, e=yy - yc, Mg=mg, t1=t1, t2=t2, t3=t3, fb=t1 + t2 + t3)
 
 
 xs = [2.7 + 0.1 * i for i in range(int((LG - 5.4) / 0.1) + 1)]
-fb_g = min((transfer_bottom(x, False), x) for x in xs)
+
+
+def worst(net, es, dy=0.0):
+    return min(((transfer_terms(x, net, es, dy)["fb"], x) for x in xs))
+
+
 lim_c = -0.55 * fci
-# 淨斷面：跨中 fcir 與 ES 也改用淨斷面
-An_m, ybn_m, In_m = net_section(y_mid)
-e_n = ybn_m - ycg
-k_n = 1 / An_m + e_n ** 2 / In_m
-ES_n = 0.5 * r_m * (F0 * k_n - Mg1 * 1e6 * e_n / In_m) / (1 + 0.5 * r_m * Aps * k_n)
-fb_n = min((transfer_bottom(x, True, ES_n), x) for x in xs)
-# 鋼絞線在套管內偏上（跨中下凹段受拉時貼向套管上緣）：重心上移 (ID − 束徑)/2 的估計
+fb_n = worst(True, ES)
+# 修正前的做法：毛斷面、f'ci = 28 MPa（以及當時若扣除套管的結果）
+r28 = P.EP / P.Ec(28.0)
+ES28_g, _ = solve_ES(r28, A, I, e_m)
+ES28_n, _ = solve_ES(r28, An_m, In_m, e_n)
+fb28_g = worst(False, ES28_g)
+fb28_n = worst(True, ES28_n)
+lim28 = -0.55 * 28.0
 d_bundle = 2 * math.sqrt(ns * P.AP / math.pi / 0.6)      # 填充率約 0.6 的等效束徑
 dy_s = (P.DUCT_ID - d_bundle) / 2
-fb_n2 = min((transfer_bottom(x, True, ES_n, dy_s), x) for x in xs)
-fci_req = -fb_n[0] / 0.55
-
-
-def transfer_terms(xg, net, es):
-    ys = [td["y_mid"] + (td["y_end"] - td["y_mid"]) * (1 - xg / HALF) ** 2 for td in P.TENDONS]
-    Fi = [Aps_t * (m["fs"](xg if e == "L" else LG - xg) - es) for m, e in zip(TM, P.JACK_END)]
-    Pi_ = sum(Fi)
-    yc = sum(F * y for F, y in zip(Fi, ys)) / Pi_
-    Aa, yy, II = net_section(ys) if net else (A, yb, I)
-    mg = w_g * xg * (LG - xg) / 2 + M_extra(xg, LG, 0.0, n=400)
-    return dict(Pi=Pi_, yc=yc, A=Aa, yb=yy, I=II, Sb=II / yy, e=yy - yc, Mg=mg,
-                t1=-Pi_ / Aa, t2=-Pi_ * (yy - yc) / (II / yy), t3=mg * 1e6 / (II / yy))
-
-
-h3("附：施預力時梁底壓應力（毛斷面與扣除套管的淨斷面）")
-para(f"〔設〕8.15.2 1. 後拉構材施預力時壓應力 ≤ 0.55 f'ci = {f(lim_c, 2)} MPa。施預力時梁以梁長 40.8 m 簡支，"
-     f"沿梁長每 0.1 m 計算，取最不利位置。淨斷面扣除 4 支外徑 {f(P.DUCT_OD, 0)} mm 套管（每支 {f(Ah, 0)} mm²），"
-     "套管中心取鋼腱線形位置；〔設〕8.17.1。")
-tg = transfer_terms(fb_g[1], False, ES)
-tn = transfer_terms(fb_n[1], True, ES_n)
-t = Table(("#", "項目", "公式", "毛斷面（程式做法）", "淨斷面"))
+fb_n2 = worst(True, ES, dy_s)
+h3("施預力時（灌漿前，淨斷面）")
+para(f"〔設〕8.15.2 1. 後拉構材施預力時壓應力 ≤ 0.55 f'ci = 0.55 × {f(fci, 0)} = {f(lim_c, 2)} MPa。"
+     f"施預力時梁以梁長 40.8 m 簡支，沿梁長每 0.1 m 計算，取最不利位置。淨斷面扣除 4 支外徑 {f(P.DUCT_OD, 0)} mm 套管"
+     f"（每支 {f(Ah, 0)} mm²），套管中心取鋼腱線形位置；〔設〕8.17.1。右欄是修正前的做法（毛斷面、f'ci = 28 MPa）。")
+tn = transfer_terms(fb_n[1], True, ES)
+tg = transfer_terms(fb28_g[1], False, ES28_g)
+t = Table(("#", "項目", "公式", f"本版：淨斷面、f'ci = {f(fci, 0)}", "修正前：毛斷面、f'ci = 28"))
 t.rows = [
-    ("1", "位置", "距梁端", f"{f(fb_g[1], 1)} m", f"{f(fb_n[1], 1)} m"),
-    ("2", "A／yb／I", "淨：A − 4Ah；yb、I 扣除各孔", f"{f(tg['A'], 0)}／{f(tg['yb'], 1)}／{tg['I']:.4e}",
-     f"{f(tn['A'], 0)}／{f(tn['yb'], 1)}／{tn['I']:.4e}"),
-    ("3", "ES", "第 6 節公式，A、e、I 換成各自斷面", f"{f(ES, 2)} MPa", f"{f(ES_n, 2)} MPa"),
-    ("4", "Pi", "Σ Aps,束 × (錨碇後應力 − ES)", f"{f(tg['Pi'] / 1e3, 1)} kN", f"{f(tn['Pi'] / 1e3, 1)} kN"),
-    ("5", "e", "yb − ycg", f"{f(tg['e'], 1)} mm", f"{f(tn['e'], 1)} mm"),
-    ("6", "Mg1(x)", "w x(Lg − x)/2 + 端塊增量", f"{f(tg['Mg'], 1)} kN·m", f"{f(tn['Mg'], 1)} kN·m"),
-    ("7", "−Pi/A", "", f(tg["t1"], 3), f(tn["t1"], 3)),
-    ("8", "−Pi·e/Sb", "", f(tg["t2"], 3), f(tn["t2"], 3)),
-    ("9", "+Mg1/Sb", "", f"+{f(tg['t3'], 3)}", f"+{f(tn['t3'], 3)}"),
-    ("10", "梁底應力", "7 + 8 + 9", f"**{f(fb_g[0], 2)} MPa**（比值 {f(fb_g[0] / lim_c, 2)}）",
-     f"**{f(fb_n[0], 2)} MPa**（比值 {f(fb_n[0] / lim_c, 2)}）"),
+    ("1", "位置", "距梁端", f"{f(fb_n[1], 1)} m", f"{f(fb28_g[1], 1)} m"),
+    ("2", "A／yb／I", "淨：A − 4Ah；yb、I 扣除各孔", f"{f(tn['A'], 0)}／{f(tn['yb'], 1)}／{tn['I']:.4e}",
+     f"{f(tg['A'], 0)}／{f(tg['yb'], 1)}／{tg['I']:.4e}"),
+    ("3", "ES", "第 6 節公式（各自的斷面與 Eci）", f"{f(ES, 2)} MPa", f"{f(ES28_g, 2)} MPa"),
+    ("4", "Pi", "Σ Aps,束 × (錨碇後應力 − ES)", f"{f(tn['Pi'] / 1e3, 1)} kN", f"{f(tg['Pi'] / 1e3, 1)} kN"),
+    ("5", "e", "yb − ycg", f"{f(tn['e'], 1)} mm", f"{f(tg['e'], 1)} mm"),
+    ("6", "Mg1(x)", "w x(Lg − x)/2 + 端塊增量", f"{f(tn['Mg'], 1)} kN·m", f"{f(tg['Mg'], 1)} kN·m"),
+    ("7", "−Pi/A", "", f(tn["t1"], 3), f(tg["t1"], 3)),
+    ("8", "−Pi·e/Sb", "", f(tn["t2"], 3), f(tg["t2"], 3)),
+    ("9", "+Mg1/Sb", "", f"+{f(tn['t3'], 3)}", f"+{f(tg['t3'], 3)}"),
+    ("10", "梁底應力", "7 + 8 + 9", f"**{f(fb_n[0], 2)} MPa**", f"**{f(fb28_g[0], 2)} MPa**"),
+    ("11", "容許值與比值", "0.55 f'ci", f"{f(lim_c, 2)} → **{f(fb_n[0] / lim_c, 2)}**",
+     f"{f(lim28, 2)} → {f(fb28_g[0] / lim28, 2)}"),
 ]
 t.flush()
-# 淨斷面對長期損失與使用應力的影響（fcds 在灌漿後，仍用毛斷面）
-fcir_n = ES_n / (0.5 * r_m)
-CRc_n = 12 * fcir_n - 7 * fcds
-CRs_n = 34.5 - 0.07 * FR - 0.1 * ES_n - 0.05 * (SH + CRc_n)
-loss_n = SH + ES_n + CRc_n + CRs_n
-Pe_n = sum(Aps_t * (v - loss_n) for v in f_mid)
-fb_sn = -Pe_n / A - Pe_n * e_e / Sb + Mnc * 1e6 / Sb + (Mc + M_LL) * 1e6 / Sbc
-cmp("施預力時梁底最大壓應力（毛斷面）", fb_g[0], R["stress"]["rel_bot_min"], "MPa", 2, f"發生於距梁端 {f(fb_g[1], 1)} m")
+para(f"敏感度：若鋼絞線在套管內貼向上緣（跨中下凹段受拉時的情形，重心上移約 {f(dy_s, 0)} mm 的估計），"
+     f"本版梁底應力為 {f(fb_n2[0], 2)} MPa。修正前的設計若扣除套管，為 {f(fb28_n[0], 2)} MPa，超過 {f(lim28, 2)}。")
+cmp("施預力時梁底最大壓應力（淨斷面）", fb_n[0], R["stress"]["rel_bot_min"], "MPa", 2, f"發生於距梁端 {f(fb_n[1], 1)} m")
 
 # ---------------------------------------------------------------------------
 # 8. φMn
@@ -826,17 +825,13 @@ findings.append(
     f"程式取上界 {f(SIIS, 3)}W = {f(H_el, 0)} kN；若技師依下部結構與支承系統確定 Fu,II，止震塊力最多可降到約 70%"
     f"（{f(red * H_el, 0)} kN）。")
 findings.append(
-    f"**施預力時應扣除套管開孔（最重要）**：〔設〕8.17.1 規定後拉構材在灌漿前計算斷面性質，應扣除套管開口面積。"
-    f"程式用毛斷面計算施預力時應力與 fcir。扣除 4 支外徑 {f(P.DUCT_OD, 0)} mm 套管後，跨中淨斷面 A = {f(An_m, 0)} mm²、"
-    f"yb = {f(ybn_m, 1)} mm、I = {In_m:.4e} mm⁴（Sb 減少 {(1 - In_m / ybn_m / Sb) * 100:.1f}%），ES 由 {f(ES, 2)} 變為 "
-    f"{f(ES_n, 2)} MPa。施預力時梁底最大壓應力由 {f(fb_g[0], 2)} 變為 **{f(fb_n[0], 2)} MPa**"
-    f"（距梁端 {f(fb_n[1], 1)} m；容許 0.55 f'ci = {f(lim_c, 2)}，比值 {f(fb_n[0] / lim_c, 2)}），"
-    + ("通過。" if fb_n[0] >= lim_c else "**超過容許值**。")
-    + f"若鋼絞線在套管內貼向上緣（跨中下凹段受拉時的情形，重心上移約 {f(dy_s, 0)} mm 的估計），為 {f(fb_n2[0], 2)} MPa"
-    f"（比值 {f(fb_n2[0] / lim_c, 3)}），仍在邊緣。要確實通過，施預力時 f'ci 需提高到約 {f(fci_req, 1)} MPa 以上"
-    f"（例如 30 MPa），或調整鋼腱配置、分階段施預力。"
-    f"另外淨斷面使 fcir 由 {f(fcir, 2)} 增為 {f(fcir_n, 2)} MPa，總損失由 {f(loss, 1)} 增為 {f(loss_n, 1)} MPa，"
-    f"使用載重下跨中梁底拉應力由 {f(fb, 2)} 增為 {f(fb_sn, 2)} MPa（容許 {f(lim_t, 2)}），仍通過。")
+    f"**施預力時的淨斷面（本版已修正）**：〔設〕8.17.1 規定後拉構材在灌漿前計算斷面性質，應扣除套管開口面積。"
+    f"修正前程式用毛斷面、f'ci = 28 MPa：毛斷面梁底壓應力 {f(fb28_g[0], 2)} MPa（比值 {f(fb28_g[0] / lim28, 2)}），"
+    f"但扣除套管後為 {f(fb28_n[0], 2)} MPa，超過 0.55 f'ci = {f(lim28, 2)}。"
+    f"本版程式改用淨斷面計算施預力時應力、fcir、ES 與施預力時上拱，並把 f'ci 提高到 {f(fci, 0)} MPa："
+    f"梁底壓應力 {f(fb_n[0], 2)} MPa，容許 {f(lim_c, 2)}，比值 {f(fb_n[0] / lim_c, 2)}。"
+    f"淨斷面使 fcir 增大，總損失由 209.6 增為 {f(loss, 1)} MPa，使用載重下跨中梁底拉應力增為 {f(fb, 2)} MPa"
+    f"（容許 {f(lim_t, 2)}）。施預力時 f'ci = {f(fci, 0)} MPa 必須在現場以試體確認後才能張拉。")
 findings.append(
     f"**Vcw 的 fpc 取點**：〔設〕8.20.2 的 fpc 為合成斷面形心處的壓應力。程式在端塊漸變段仍用跨中合成斷面的形心高度 "
     f"{f(ybc, 0)} mm；本斷面自己的合成形心為 {f(yj, 0)} mm。前者 Vcw = {f(Vcw_p / 1e3, 0)} kN，後者 {f(Vcw / 1e3, 0)} kN，"

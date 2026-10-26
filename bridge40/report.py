@@ -138,7 +138,7 @@ def text_report(S):
       f" = {ls['total']:.1f} MPa；fcir {ls['fcir']:.2f}、fcds {ls['fcds']:.2f}")
     w(f"  跨中 Pi = {pt['Pi_mid']:.0f} kN、Pe = {pt['Pe_mid']:.0f} kN、fse = {pt['fse_mid']:.0f} MPa")
     lim = st["lim"]
-    w(f"\n[應力] 施預力：底 {st['rel_bot_min']:.2f} ≥ {lim['c_rel']:.2f}；頂 {st['rel_top_max']:.2f} ≤ "
+    w(f"\n[應力] 施預力（淨斷面，扣除套管）：底 {st['rel_bot_min']:.2f} ≥ {lim['c_rel']:.2f}；頂 {st['rel_top_max']:.2f} ≤ "
       f"{lim['t_rel_nb']:.2f}")
     w(f"  使用：底 {st['fin_bot_max']:.2f} ≤ {lim['t_fin']:.2f}；頂 Pe+DL {st['top_perm_min']:.2f}、"
       f"0.5(Pe+DL)+LL {st['top_mix_min']:.2f} ≥ {lim['c_perm']:.1f}；全載重 {st['top_all_min']:.2f} ≥ "

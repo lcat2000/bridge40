@@ -62,7 +62,7 @@
 <text x="1342.00" y="1086.00" class="tbk" text-anchor="start">依據</text>
 <text x="1342.00" y="1120.00" class="tbv" text-anchor="start">交通部公路橋梁設計規範、耐震設計規範</text>
 <text x="32.00" y="1154.00" class="tbk" text-anchor="start">所有尺寸以 mm 計，高程與座標自梁底、梁端起算；本圖由程式自計算結果產生。</text>
-<text x="1342.00" y="1154.00" class="tbk" text-anchor="start">2026-10-23　設計：AI 示範（未經技師簽證）</text>
+<text x="1342.00" y="1154.00" class="tbk" text-anchor="start">2026-10-26 修訂 A　設計：AI 示範（未經技師簽證）</text>
 <rect x="1415.00" y="30.00" width="230.00" height="44.00" class="stamp"/>
 <text x="1530.00" y="60.00" class="stamptxt" text-anchor="middle">示範・非施工圖</text>
 <text x="800.00" y="58.00" class="vtitle" text-anchor="middle">預力梁半立面與鋼腱線形</text>
@@ -307,8 +307,8 @@
 <text x="1060.00" y="820.00" class="note" text-anchor="start">3. 錨碇滑動 6 mm；錨碇後端錨 ≤ 0.70 f's、</text>
 <text x="1060.00" y="844.00" class="note" text-anchor="start">   滑動影響範圍末端 ≤ 0.83 fy*（8.15.1）。</text>
 <text x="1060.00" y="868.00" class="note" text-anchor="start">4. 摩擦 K = 0.0007 /m、μ = 0.25（鍍鋅金屬套管）。</text>
-<text x="1060.00" y="892.00" class="note" text-anchor="start">5. 施預力時梁混凝土 f'ci ≥ 28 MPa。</text>
-<text x="1060.00" y="916.00" class="note" text-anchor="start">6. 損失（跨中）210 MPa；有效預力 Pe ≈ 6,282 kN。</text>
+<text x="1060.00" y="892.00" class="note" text-anchor="start">5. 施預力時梁混凝土 f'ci ≥ 30 MPa。</text>
+<text x="1060.00" y="916.00" class="note" text-anchor="start">6. 損失（跨中）224 MPa；有效預力 Pe ≈ 6,198 kN。</text>
 <text x="1060.00" y="940.00" class="note" text-anchor="start">7. 張拉完成後 48 小時內以無收縮水泥漿全長灌漿。</text>
-<text x="1060.00" y="964.00" class="note" text-anchor="start">8. 預拱：張拉時跨中上拱約 35 mm。</text>
+<text x="1060.00" y="964.00" class="note" text-anchor="start">8. 預拱：張拉時跨中上拱約 39 mm。</text>
 <text x="1060.00" y="988.00" class="note" text-anchor="start">9. 張拉力與伸長量差異超過 ±7% 時應停工檢討。</text></svg>

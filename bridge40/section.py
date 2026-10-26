@@ -100,6 +100,18 @@ def web_width(x_from_end):
     return P.WEB_T
 
 
+def net_section(sec, ys):
+    """扣除套管開孔的淨斷面：後拉構材灌漿前的斷面性質（〔設〕8.17.1）。
+    sec：section_at() 的毛斷面；ys：各套管中心高度（mm，取鋼腱線形位置）。"""
+    Ah = math.pi * (P.DUCT_OD / 2) ** 2
+    Ih = math.pi * P.DUCT_OD ** 4 / 64
+    A, yb, I = sec["A"], sec["yb"], sec["I"]
+    An = A - Ah * len(ys)
+    ybn = (A * yb - Ah * sum(ys)) / An
+    In = I + A * (yb - ybn) ** 2 - sum(Ah * (y - ybn) ** 2 + Ih for y in ys)
+    return dict(bw=sec["bw"], A=An, yb=ybn, I=In, Sb=In / ybn, St=In / (P.GIRDER_H - ybn))
+
+
 def section_at(x_from_end, props):
     """沿梁長的非合成斷面性質（端塊段依腹板寬線性內插面積與慣性矩，近似）。"""
     bw = web_width(x_from_end)

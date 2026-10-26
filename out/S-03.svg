@@ -62,7 +62,7 @@
 <text x="1342.00" y="1086.00" class="tbk" text-anchor="start">依據</text>
 <text x="1342.00" y="1120.00" class="tbv" text-anchor="start">交通部公路橋梁設計規範、耐震設計規範</text>
 <text x="32.00" y="1154.00" class="tbk" text-anchor="start">所有尺寸以 mm 計，高程與座標自梁底、梁端起算；本圖由程式自計算結果產生。</text>
-<text x="1342.00" y="1154.00" class="tbk" text-anchor="start">2026-10-23　設計：AI 示範（未經技師簽證）</text>
+<text x="1342.00" y="1154.00" class="tbk" text-anchor="start">2026-10-26 修訂 A　設計：AI 示範（未經技師簽證）</text>
 <rect x="1415.00" y="30.00" width="230.00" height="44.00" class="stamp"/>
 <text x="1530.00" y="60.00" class="stamptxt" text-anchor="middle">示範・非施工圖</text>
 <text x="390.00" y="52.00" class="vtitle" text-anchor="middle">梁端配筋（立面）</text>
@@ -216,7 +216,7 @@
 <text x="300.00" y="810.00" class="notes" text-anchor="start">G = 0.86 MPa（硬度約 55）；形狀係數 S = 8.58</text>
 <text x="300.00" y="832.00" class="notes" text-anchor="start">σ = 6.51 ≤ 6.86 MPa（10.6.6 方法 B）</text>
 <text x="300.00" y="854.00" class="notes" text-anchor="start">Δs = 24.6 mm；hrt = 72 ≥ 2Δs</text>
-<text x="300.00" y="876.00" class="notes" text-anchor="start">θ = 8.6 mrad，檢核不上揚</text>
+<text x="300.00" y="876.00" class="notes" text-anchor="start">θ = 8.3 mrad，檢核不上揚</text>
 <text x="300.00" y="898.00" class="notes" text-anchor="start">抗拉拔裝置極限拉力 ≥ 128 kN（每個支承）</text>
 <text x="1150.00" y="492.00" class="vtitle" text-anchor="middle">橋台座平面（止震塊與防落長度）</text>
 <line x1="985.00" y1="499.00" x2="1315.00" y2="499.00" class="vline"/>
