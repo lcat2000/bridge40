@@ -8,7 +8,7 @@ This program designs the superstructure of a 40 m simply supported, post-tension
 
 ![S-01 General arrangement](out/S-01.png)
 
-The full design notes (loads, prestressing, stresses, strength, shear, anchorage zones, deck slab, bearings and seismic design) are in [docs/design-notes.md](docs/design-notes.md). The design notes and drawings are in Traditional Chinese.
+The full design notes (loads, prestressing, stresses, strength, shear, anchorage zones, deck slab, bearings and seismic design) are in [docs/design-notes.md](docs/design-notes.md). A blog post about how the design was done with AI is in [docs/blog.md](docs/blog.md). The design notes, blog post and drawings are in Traditional Chinese.
 
 ## Design basis
 

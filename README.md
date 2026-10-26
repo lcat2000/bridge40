@@ -8,7 +8,7 @@
 
 ![S-01 一般配置圖](out/S-01.png)
 
-完整的設計說明（載重、預力、應力、強度、剪力、錨碇區、橋面版、支承、耐震）在 [docs/design-notes.md](docs/design-notes.md)。
+完整的設計說明（載重、預力、應力、強度、剪力、錨碇區、橋面版、支承、耐震）在 [docs/design-notes.md](docs/design-notes.md)；這次用 AI 做設計的經過與心得寫在 [docs/blog.md](docs/blog.md)。
 
 ## 設計條件
 
