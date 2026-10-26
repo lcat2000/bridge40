@@ -27,7 +27,7 @@
 | 檢核 | 計算值 | 容許值 | 比值 |
 | --- | --- | --- | --- |
 | 撓曲強度 Mu / φMn | 15,686 kN·m | 19,894 kN·m | 0.79 |
-| 施預力時梁底壓應力 | −14.48 MPa | 0.55 f'ci = −15.40 MPa | 0.94 |
+| 施預力時梁底壓應力（毛斷面） | −14.48 MPa | 0.55 f'ci = −15.40 MPa | 0.94（扣除套管後超過，見下方「獨立核對」） |
 | 使用載重梁底拉應力 | +1.73 MPa | 0.498√f'c = 2.95 MPa | 0.59 |
 | 活載重加衝擊撓度 | 10.8 mm | L/800 = 50 mm | 0.22 |
 | 剪力 Vu / φVn（全梁最大） | — | — | 0.68 |
@@ -41,6 +41,7 @@
 pip install -r requirements.txt
 python run_all.py              # 計算與出圖，結果輸出到 out/
 python docs/make_figures.py    # （選用）重畫設計說明的兩張圖，需要 matplotlib
+python checks/hand_checks.py   # 產生獨立核對計算書 checks/hand_checks.md
 ```
 
 需要 Python 3.10 以上。出圖用 cairosvg，系統需有「Noto Sans CJK TC」字型（Debian/Ubuntu：`apt install fonts-noto-cjk`）。
@@ -69,6 +70,7 @@ python docs/make_figures.py    # （選用）重畫設計說明的兩張圖，�
 | `bridge40/drawings.py` | 由參數與結果產生 SVG 圖面 |
 | `bridge40/page.py` | 把圖面組成網頁 |
 | `docs/make_figures.py` | 由 `results.json` 畫設計說明裡的鋼腱應力圖與反應譜圖 |
+| `checks/hand_checks.py` | 獨立核對計算書產生器：只讀 `params.py`，不呼叫主程式，逐行重算並與結果對照 |
 
 ## 主要假設（條文沒有規定、由本程式自行選定）
 
@@ -88,6 +90,12 @@ python docs/make_figures.py    # （選用）重畫設計說明的兩張圖，�
 
 - [交通部：公路橋梁設計規範](https://www.motc.gov.tw/ch/app/data/view?module=divpubreg&id=740&serno=424)
 - [交通部：公路橋梁耐震設計規範](https://www.motc.gov.tw/ch/app/divpubreg_list/view?module=divpubreg&id=740&serno=419)
+
+## 獨立核對
+
+[checks/hand_checks.md](checks/hand_checks.md) 把預力損失、跨中梁底應力、φMn、Vcw、爆裂力、支承墊與止震塊逐行寫出公式、條號、代入的數字與結果，並與程式結果對照，供結構技師逐行檢查。它由 `checks/hand_checks.py` 產生，只讀輸入參數，斷面、彎矩、摩擦等都用和主程式不同的方法重算。它和主程式一樣由 AI 撰寫，**尚未經人工複核**。
+
+核對發現的主要問題：依〔設〕8.17.1，後拉構材灌漿前的斷面應扣除套管開孔。扣除後施預力時梁底壓應力約 −15.7 MPa，超過 0.55 f'ci = −15.4 MPa。主程式目前用毛斷面計算，這一項需要修改（例如施預力時 f'ci 提高到 30 MPa）。其餘需要技師判斷的事項見計算書第 14 節。
 
 ## 授權
 
